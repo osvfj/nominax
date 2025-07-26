@@ -1,0 +1,14 @@
+# Ignore target directory
+/target/
+
+# Ignore IDE files
+/.idea/
+/*.iml
+
+# Ignore build files
+*.class
+*.jar
+*.war
+
+# Ignore log files
+*.log
