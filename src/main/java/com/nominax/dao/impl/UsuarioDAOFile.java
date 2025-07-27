@@ -44,25 +44,10 @@ public class UsuarioDAOFile implements UsuarioDAO {
     @Override
     public void guardar(Usuario usuario) throws IOException {
         List<Usuario> usuariosActuales = obtenerTodos(); 
-        
-        boolean encontrado = false;
-        // Busca si el usuario ya existe para actualizarlo
-        for (int i = 0; i < usuariosActuales.size(); i++) {
-            if (usuariosActuales.get(i).getUsuario().equalsIgnoreCase(usuario.getUsuario())) {
-                String hashedPassword = BCrypt.hashpw(usuario.getPassword(), BCrypt.gensalt(10));
-                usuario.setPassword(hashedPassword);
-                usuariosActuales.set(i, usuario); 
-                encontrado = true;
-                break;
-            }
-        }
-        
 
-        if (!encontrado) {
-            String hashedPassword = BCrypt.hashpw(usuario.getPassword(), BCrypt.gensalt(10));
-            usuario.setPassword(hashedPassword);
-            usuariosActuales.add(usuario); 
-        }
+        String hashedPassword = BCrypt.hashpw(usuario.getPassword(), BCrypt.gensalt(10));
+        usuario.setPassword(hashedPassword);
+        usuariosActuales.add(usuario); 
         
         List<String> lineasaAguardar = usuariosActuales.stream()
             .map(this::convertirUsuarioALinea) 
@@ -70,6 +55,29 @@ public class UsuarioDAOFile implements UsuarioDAO {
 
         ManejadorArchivos.escribirTodasLasLineas(NOMBRE_ARCHIVO, lineasaAguardar);
     }
+    
+    @Override
+     public void actualizar(Usuario usuario, boolean cambiarPassword) throws IOException {
+         List<Usuario> usuariosActuales = obtenerTodos(); 
+
+        for (int i = 0; i < usuariosActuales.size(); i++) {
+            if (usuariosActuales.get(i).getUsuario().equalsIgnoreCase(usuario.getUsuario())) {        
+                if(cambiarPassword){
+                    String hashedPassword = BCrypt.hashpw(usuario.getPassword(), BCrypt.gensalt(10));
+                    usuario.setPassword(hashedPassword);
+                }
+                
+              
+                usuariosActuales.set(i, usuario); 
+                List<String> lineasaAguardar = usuariosActuales.stream()
+                    .map(this::convertirUsuarioALinea) 
+                    .collect(Collectors.toList());
+
+                ManejadorArchivos.escribirTodasLasLineas(NOMBRE_ARCHIVO, lineasaAguardar);
+                break;
+            }
+        }        
+     }
 
     @Override
     public void eliminar(String usuario) throws IOException {
