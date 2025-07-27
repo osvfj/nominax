@@ -17,7 +17,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class UsuarioDAOFile implements UsuarioDAO {
 
-    private static final String NOMBRE_ARCHIVO = "c:/nominax/usuarios.txt";
+    private static final String NOMBRE_ARCHIVO = "usuarios.txt";
     private static final String SEPARADOR = ";";
 
     @Override
