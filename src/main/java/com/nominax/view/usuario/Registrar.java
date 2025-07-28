@@ -49,6 +49,7 @@ public class Registrar extends javax.swing.JFrame {
         registrar = new javax.swing.JButton();
         roleLabel = new javax.swing.JLabel();
         txtApellidos = new javax.swing.JTextField();
+        reiniciar = new javax.swing.JButton();
         lblMensajeEstado = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -97,13 +98,13 @@ public class Registrar extends javax.swing.JFrame {
         });
 
         usuarioLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        usuarioLabel.setText("Usuario");
+        usuarioLabel.setText("Usuario*");
 
         passLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        passLabel.setText("Contraseña");
+        passLabel.setText("Contraseña*");
 
         nombreLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        nombreLabel.setText("Nombre");
+        nombreLabel.setText("Nombre*");
 
         txtNombre.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtNombre.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, null, new java.awt.Color(102, 102, 255)));
@@ -114,7 +115,7 @@ public class Registrar extends javax.swing.JFrame {
         });
 
         apellidosLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        apellidosLabel.setText("Apellidos");
+        apellidosLabel.setText("Apellidos*");
 
         txtPassword.setBorder(javax.swing.BorderFactory.createEtchedBorder(null, new java.awt.Color(102, 102, 255)));
 
@@ -147,13 +148,26 @@ public class Registrar extends javax.swing.JFrame {
         });
 
         roleLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        roleLabel.setText("Role");
+        roleLabel.setText("Role*");
 
         txtApellidos.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtApellidos.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, null, new java.awt.Color(102, 102, 255)));
         txtApellidos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtApellidosActionPerformed(evt);
+            }
+        });
+
+        reiniciar.setBackground(new java.awt.Color(102, 102, 255));
+        reiniciar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        reiniciar.setForeground(new java.awt.Color(255, 255, 255));
+        reiniciar.setText("Limpiar");
+        reiniciar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, null, new java.awt.Color(102, 102, 255), new java.awt.Color(102, 102, 255)));
+        reiniciar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        reiniciar.setDefaultCapable(false);
+        reiniciar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reiniciarActionPerformed(evt);
             }
         });
 
@@ -173,7 +187,8 @@ public class Registrar extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, registerFormLayout.createSequentialGroup()
                         .addGroup(registerFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(registerFormLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(reiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(registrar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(cmbRole, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtCorreo))
@@ -226,7 +241,9 @@ public class Registrar extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbRole, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(registrar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(registerFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(registrar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(reiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         lblMensajeEstado.setForeground(new java.awt.Color(255, 51, 51));
@@ -326,7 +343,7 @@ public class Registrar extends javax.swing.JFrame {
                  user.setNombre(nombre);
                  user.setApellidos(apellidos);
                  user.setEmail(email);
-                 System.out.println(nivelDeAcceso);
+      
                  user.setNivelDeAcceso(nivelDeAcceso);
 
                  if(!password.isEmpty()) {
@@ -334,22 +351,23 @@ public class Registrar extends javax.swing.JFrame {
                      cambiarPassword = true;
                  }
                  
+                 if(!this.validarCampos(!cambiarPassword)) return;
+
                  this.userDb.actualizar(user, cambiarPassword);
                  JOptionPane.showMessageDialog(this, "Usuario actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                 limpiarFormulario(); 
-                 txtUsuario.setEnabled(true);
                  return;
              }
             
-             if (!this.validarCampos()) return;
+             
+            if(!this.validarCampos(false)) return;
             
             Usuario nuevoUsuario = new Usuario(usuario, password, nivelDeAcceso, nombre, apellidos, email);
             this.userDb.guardar(nuevoUsuario);
-            JOptionPane.showMessageDialog(this, "Usuario guardado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE); 
-            limpiarFormulario(); 
-            this.dispose();
+            JOptionPane.showMessageDialog(this, "Usuario guardado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al guardar usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            reiniciarFormulario();
         }
     }//GEN-LAST:event_registrarActionPerformed
 
@@ -365,8 +383,8 @@ public class Registrar extends javax.swing.JFrame {
                 
                 Usuario user = usuarioEncontrado.get();
                 
+                passLabel.setText("Contraseña");
                 txtUsuario.setEnabled(false);
-                
                 txtNombre.setText(user.getNombre());
                 txtApellidos.setText(user.getApellidos());
                 txtCorreo.setText(user.getEmail());
@@ -384,6 +402,10 @@ public class Registrar extends javax.swing.JFrame {
         evt.setKeyCode('\n');
         txtUsuarioKeyPressed(evt);
     }//GEN-LAST:event_txtUsuarioKeyReleased
+
+    private void reiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reiniciarActionPerformed
+      this.reiniciarFormulario();
+    }//GEN-LAST:event_reiniciarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -422,23 +444,38 @@ public class Registrar extends javax.swing.JFrame {
     }
     
     
-        private boolean validarCampos(){
-            Boolean validacion = txtNombre.getText().trim().isEmpty() || new String(txtPassword.getPassword()).isEmpty() 
-                              || cmbRole.getSelectedIndex() == -1 || txtUsuario.getText().isEmpty() || txtUsuario.getText().isEmpty();               
-            if(validacion){
-               lblMensajeEstado.setText("Todos los campos son obligatorios."); 
-               lblMensajeEstado.setForeground(Color.RED); 
-               return false; 
-            } 
-           return true; 
+    private boolean validarCampos(boolean ignorarPassword){
+        boolean nombreVacio = txtNombre.getText().trim().isEmpty(); 
+        boolean passwordVacia = new String(txtPassword.getPassword()).isEmpty();
+        boolean roleVacio = cmbRole.getSelectedIndex() == -1;
+        boolean usuarioVacio = txtUsuario.getText().isEmpty();
+        boolean apellidosVacio = txtApellidos.getText().isEmpty();  
+        
+        if(ignorarPassword){
+            if(nombreVacio || apellidosVacio || usuarioVacio || roleVacio){
+                lblMensajeEstado.setText("Todos los campos (*) son obligatorios."); 
+                lblMensajeEstado.setForeground(Color.RED); 
+                return false; 
+             } 
+        } else {
+              if(nombreVacio || apellidosVacio || usuarioVacio || passwordVacia || roleVacio){
+                lblMensajeEstado.setText("Todos los campos son obligatorios."); 
+                lblMensajeEstado.setForeground(Color.RED); 
+                return false; 
+             } 
+        }
+        
+       return true; 
    }
         
-    private void limpiarFormulario(){ 
+    private void reiniciarFormulario(){ 
        txtNombre.setText(""); 
        txtPassword.setText(""); 
        cmbRole.setSelectedIndex(-1); 
        lblMensajeEstado.setText("");
        txtUsuario.setText("");
+       txtUsuario.setEnabled(true);
+       passLabel.setText("Contraseña*");
        txtApellidos.setText("");
        txtCorreo.setText("");
     } 
@@ -457,6 +494,7 @@ public class Registrar extends javax.swing.JFrame {
     private javax.swing.JPanel registerForm;
     private javax.swing.JLabel registerLabel;
     private javax.swing.JButton registrar;
+    private javax.swing.JButton reiniciar;
     private javax.swing.JLabel roleLabel;
     private javax.swing.JTextField txtApellidos;
     private javax.swing.JTextField txtCorreo;
