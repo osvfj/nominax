@@ -2,6 +2,11 @@ package com.nominax.view.menu;
 import com.nominax.entity.Usuario;
 import com.nominax.view.usuario.Login;
 import com.nominax.view.usuario.Registrar;
+import com.nominax.view.departamento.DepartamentoUI;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Karla Alcantara
@@ -77,6 +82,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         mantenimientos.add(itmUsuarios);
 
         itmDepartamentos.setText("Departamentos");
+        itmDepartamentos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmDepartamentosActionPerformed(evt);
+            }
+        });
         mantenimientos.add(itmDepartamentos);
 
         itmPuestos.setText("Puestos");
@@ -186,7 +196,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
             }
         });
         empleados.add(itmEmpleadosFCon);
-        itmEmpleadosFCon.getAccessibleContext().setAccessibleDescription("Filtrar por fecha de ingreso");
 
         consultas.add(empleados);
 
@@ -315,6 +324,16 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private void itmNominaPorIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmNominaPorIdActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_itmNominaPorIdActionPerformed
+
+    private void itmDepartamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmDepartamentosActionPerformed
+        try {
+            DepartamentoUI screen = new DepartamentoUI();
+            screen.setVisible(true);
+            screen.setLocationRelativeTo(null);
+        } catch (IOException ex) {
+            Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_itmDepartamentosActionPerformed
 
    public void restringirOpciones() 
    { 

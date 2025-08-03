@@ -29,3 +29,5 @@ public class Nominax {
         }
     }
 }
+
+// departamento, empleados, puestos. Consultas: Por departamento, por puestos, por empleados: gednero, nombre, 

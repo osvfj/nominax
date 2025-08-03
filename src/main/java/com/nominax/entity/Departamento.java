@@ -8,12 +8,20 @@ package com.nominax.entity;
 
 
 public class Departamento {
-    private final int id;
-    private final String descripcion;
+    private int id;
+    private String descripcion;
 
     public Departamento(int id, String descripcion) {
+        
+        this.validarAtributos(id, descripcion);
         this.id = id;
         this.descripcion = descripcion;
+    }
+    
+      private void validarAtributos(int id, String descripcion) {
+        if(descripcion == null || descripcion.isEmpty()){
+            throw new IllegalArgumentException("La descripción es obligatoria.");
+        }
     }
 
     public int getId() {
@@ -22,5 +30,13 @@ public class Departamento {
 
     public String getDescripcion() {
         return descripcion;
+    }
+    
+    public void setId(int id) {
+        this.id = id; 
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }
