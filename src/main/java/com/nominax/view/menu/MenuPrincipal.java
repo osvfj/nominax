@@ -11,6 +11,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     public MenuPrincipal(int nivelAcceso, Usuario usuario) 
     {
         initComponents();
+        this.setTitle("Nominax: Home");
         setExtendedState(this.MAXIMIZED_BOTH);
  
         if (nivelAcceso != 0) 

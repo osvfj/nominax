@@ -165,9 +165,6 @@
                     <Property name="text" type="java.lang.String" value="Por fecha de ingreso"/>
                     <Property name="toolTipText" type="java.lang.String" value="Filtrar por fecha de ingreso"/>
                   </Properties>
-                  <AccessibilityProperties>
-                    <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value="Filtrar por fecha de ingreso"/>
-                  </AccessibilityProperties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmEmpleadosFConActionPerformed"/>
                   </Events>

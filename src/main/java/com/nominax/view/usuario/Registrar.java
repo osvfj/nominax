@@ -4,6 +4,8 @@ import com.nominax.dao.UsuarioDAO;
 import com.nominax.dao.impl.UsuarioDAOFile;
 import java.awt.Color;
 import com.nominax.entity.Usuario;
+import java.awt.HeadlessException;
+import java.io.IOException;
 import java.util.Optional;
 import javax.swing.JOptionPane;
 
@@ -12,12 +14,13 @@ import javax.swing.JOptionPane;
  * @author osvfj
  */
 public class Registrar extends javax.swing.JFrame {
-    private UsuarioDAO userDb;
+    private final UsuarioDAO userDb;
     /**
      * Creates new form Login
      */
     public Registrar() {
         initComponents();
+        this.setTitle("Registrar usuario");
         this.userDb = new UsuarioDAOFile();
     }
 
@@ -91,9 +94,6 @@ public class Registrar extends javax.swing.JFrame {
         txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtUsuarioKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtUsuarioKeyReleased(evt);
             }
         });
 
@@ -355,6 +355,7 @@ public class Registrar extends javax.swing.JFrame {
 
                  this.userDb.actualizar(user, cambiarPassword);
                  JOptionPane.showMessageDialog(this, "Usuario actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                 reiniciarFormulario();
                  return;
              }
             
@@ -364,10 +365,8 @@ public class Registrar extends javax.swing.JFrame {
             Usuario nuevoUsuario = new Usuario(usuario, password, nivelDeAcceso, nombre, apellidos, email);
             this.userDb.guardar(nuevoUsuario);
             JOptionPane.showMessageDialog(this, "Usuario guardado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception e) {
+        } catch (HeadlessException | IOException e) {
             JOptionPane.showMessageDialog(this, "Error al guardar usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            reiniciarFormulario();
         }
     }//GEN-LAST:event_registrarActionPerformed
 
@@ -392,16 +391,11 @@ public class Registrar extends javax.swing.JFrame {
                 
                 lblMensajeEstado.setText("Actualizando registro."); 
                 lblMensajeEstado.setForeground(Color.RED);
-            } catch (Exception e) {
+            } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error al buscar el usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_txtUsuarioKeyPressed
-
-    private void txtUsuarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyReleased
-        evt.setKeyCode('\n');
-        txtUsuarioKeyPressed(evt);
-    }//GEN-LAST:event_txtUsuarioKeyReleased
 
     private void reiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reiniciarActionPerformed
       this.reiniciarFormulario();
@@ -459,7 +453,7 @@ public class Registrar extends javax.swing.JFrame {
              } 
         } else {
               if(nombreVacio || apellidosVacio || usuarioVacio || passwordVacia || roleVacio){
-                lblMensajeEstado.setText("Todos los campos son obligatorios."); 
+                lblMensajeEstado.setText("Todos los campos (*) son obligatorios."); 
                 lblMensajeEstado.setForeground(Color.RED); 
                 return false; 
              } 
