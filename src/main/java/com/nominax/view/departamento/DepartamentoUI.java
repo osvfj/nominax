@@ -105,7 +105,7 @@ public class DepartamentoUI extends javax.swing.JFrame {
         reiniciar.setBackground(new java.awt.Color(102, 102, 255));
         reiniciar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         reiniciar.setForeground(new java.awt.Color(255, 255, 255));
-        reiniciar.setText("Limpiar");
+        reiniciar.setText("Reiniciar");
         reiniciar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, null, new java.awt.Color(102, 102, 255), new java.awt.Color(102, 102, 255)));
         reiniciar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         reiniciar.setDefaultCapable(false);

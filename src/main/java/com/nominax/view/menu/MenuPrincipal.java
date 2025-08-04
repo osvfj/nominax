@@ -3,6 +3,7 @@ import com.nominax.entity.Usuario;
 import com.nominax.view.usuario.Login;
 import com.nominax.view.usuario.Registrar;
 import com.nominax.view.departamento.DepartamentoUI;
+import com.nominax.view.puesto.PuestoUI;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -271,7 +272,13 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_itmUsuariosActionPerformed
 
     private void itmPuestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmPuestosActionPerformed
-       // new MantenimientoPuestos().setVisible(true);
+        try {
+            PuestoUI screen = new PuestoUI();
+            screen.setVisible(true);
+            screen.setLocationRelativeTo(null);
+        } catch (IOException ex) {
+            Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_itmPuestosActionPerformed
 
     private void itmEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmEmpleadosActionPerformed
