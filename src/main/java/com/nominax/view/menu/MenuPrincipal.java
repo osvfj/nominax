@@ -344,8 +344,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
    public void restringirOpciones() 
    { 
-        itmUsuarios.setEnabled(false); 
-        itmDepartamentos.setEnabled(false); 
+        itmUsuarios.setEnabled(false);
         procesos.setEnabled(false);
    } 
 
