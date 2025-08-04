@@ -1,14 +1,17 @@
 package com.nominax.view.empleado;
 
+import com.nominax.dao.CooperativaDAO;
 import com.nominax.dao.EmpleadoDAO;
 import com.nominax.dao.DepartamentoDAO;
 import com.nominax.dao.PuestoDAO;
+import com.nominax.dao.impl.CooperativaDAOFile;
 import com.nominax.dao.impl.EmpleadoDAOFile;
 import com.nominax.dao.impl.DepartamentoDAOFile;
 import com.nominax.dao.impl.PuestoDAOFile;
 import com.nominax.entity.Empleado;
 import com.nominax.entity.Departamento;
 import com.nominax.entity.Puesto;
+import com.nominax.entity.Cooperativa;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -27,6 +30,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
     private final EmpleadoDAO empleadoDAO;
     private final DepartamentoDAO departamentoDAO;
     private final PuestoDAO puestoDAO;
+    private final CooperativaDAO cooperativaDAO;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public MantenimientoEmpleados() {
@@ -35,8 +39,11 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         this.empleadoDAO = new EmpleadoDAOFile();
         this.departamentoDAO = new DepartamentoDAOFile();
         this.puestoDAO = new PuestoDAOFile();
+        this.cooperativaDAO = new CooperativaDAOFile();
         cargarCombos();
         lblFechaIngreso2.setText(dateFormat.format(new Date()));
+        txtDescuento.setEnabled(chkCoop.isSelected());
+        txtDescuento.setOpaque(chkCoop.isSelected());
     }
 
     /**
@@ -78,6 +85,8 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         registrar = new javax.swing.JButton();
         reiniciar = new javax.swing.JButton();
         lblMensajeEstado = new javax.swing.JLabel();
+        txtDescuento = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -272,6 +281,9 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
 
         lblMensajeEstado.setText("                          ");
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setText("Descuento*");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -292,11 +304,13 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                         .addComponent(reiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(registrar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDescuento, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
                             .addComponent(chkCoop)
-                            .addComponent(lblMensajeEstado))
+                            .addComponent(lblMensajeEstado)
+                            .addComponent(jLabel5))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -317,13 +331,17 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                 .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addComponent(chkCoop)
-                .addGap(60, 60, 60)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
+                .addComponent(lblMensajeEstado)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(registrar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(reiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
-                .addComponent(lblMensajeEstado)
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addContainerGap(133, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -362,7 +380,37 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTelefonoFocusLost
 
     private void chkCoopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkCoopActionPerformed
-        // TODO add your handling code here:
+        boolean isSelected = chkCoop.isSelected();
+
+        // Si está desactivando la cooperativa, verificar si es un empleado existente
+        if (!isSelected) {
+            String id = txtIdEmpleado.getText().trim();
+            if (!id.isEmpty() && !txtIdEmpleado.isEnabled()) { // Es empleado existente
+                try {
+                    Optional<Cooperativa> coopExistente = cooperativaDAO.buscarPorIdEmpleado(Integer.parseInt(id));
+                    if (coopExistente.isPresent() && coopExistente.get().getBalance() > 0) {
+                        JOptionPane.showMessageDialog(this, 
+                            "No se puede desactivar la cooperativa. El empleado tiene un balance acumulado mayor a cero.",
+                            "Advertencia", JOptionPane.WARNING_MESSAGE);
+                        chkCoop.setSelected(true); // Revertir el cambio
+                        return;
+                    }
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Error al verificar balance de cooperativa: " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    chkCoop.setSelected(true); // Revertir por seguridad
+                    return;
+                }
+            }
+        }
+
+        txtDescuento.setEnabled(isSelected);
+        txtDescuento.setOpaque(isSelected);
+
+        if (!isSelected) {
+            txtDescuento.setText(""); // Limpiar el campo si se desactiva
+        }
     }//GEN-LAST:event_chkCoopActionPerformed
 
     private void txtIdEmpleadoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdEmpleadoKeyPressed
@@ -383,7 +431,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
     }
 
     private void registrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrarActionPerformed
-       try {
+        try {
             String idStr = txtIdEmpleado.getText().trim();
             String nombre = txtNombreEmpleado.getText().trim();
             String primerApellido = txtPrimerApellido.getText().trim();
@@ -391,9 +439,9 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
             String direccion = txtDireccion.getText().trim();
             String telefonoStr = txtTelefono.getText().trim();
             String salarioStr = txtSalario.getText().trim();
-            
+
             if (!validarCampos()) return;
-            
+
             int idEmpleado;
             try {
                 idEmpleado = Integer.parseInt(idStr);
@@ -407,25 +455,26 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                 lblMensajeEstado.setForeground(Color.RED);
                 return;
             }
-            
+
             String id = String.valueOf(idEmpleado); 
-            
+
             Long telefono = Long.parseLong(telefonoStr);
             Boolean sexo = cmbGenero.getSelectedIndex() == 0; // M = true, F = false
-            
+
             String selectedDepartamento = (String) cmbIdDepartamento.getSelectedItem();
             String selectedPuesto = (String) cmbIdPuesto.getSelectedItem();
-            
+
             Integer idDepto = Integer.parseInt(selectedDepartamento.split(" - ")[0]);
             Integer idPuesto = Integer.parseInt(selectedPuesto.split(" - ")[0]);
-            
+
             Boolean coop = chkCoop.isSelected();
             Double salario = Double.parseDouble(salarioStr);
             Date fechaIngreso = dateFormat.parse(lblFechaIngreso2.getText());
-            
+
             Optional<Empleado> empleadoEncontrado = empleadoDAO.buscarPorId(id);
-            
+
             if (empleadoEncontrado.isPresent()) {
+                // Actualizar empleado existente
                 Empleado empleado = empleadoEncontrado.get();
                 empleado.setNombre(nombre);
                 empleado.setApellidoPat(primerApellido);
@@ -437,22 +486,52 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                 empleado.setIdPuesto(idPuesto);
                 empleado.setCoop(coop);
                 empleado.setSalario(salario);
-                
+
                 empleadoDAO.actualizar(empleado);
+
+                // Manejar cooperativa para empleado existente
+                Optional<Cooperativa> coopExistente = cooperativaDAO.buscarPorIdEmpleado(idEmpleado);
+
+                if (coop) {
+                    double descuento = Double.parseDouble(txtDescuento.getText().trim());
+
+                    if (coopExistente.isPresent()) {
+                        // Actualizar cooperativa existente
+                        Cooperativa cooperativa = coopExistente.get();
+                        cooperativa.setDescuento(descuento);
+                        cooperativaDAO.actualizar(cooperativa);
+                    } else {
+                        // Crear nueva cooperativa
+                        cooperativaDAO.guardar(new Cooperativa(idEmpleado, descuento));
+                    }
+                } else {
+                    // Si desactiva cooperativa y existe registro, eliminarlo (solo si balance = 0)
+                    if (coopExistente.isPresent()) {
+                        cooperativaDAO.eliminar(coopExistente.get().getIdEmpleado());
+                    }
+                }
+
                 JOptionPane.showMessageDialog(this, "Empleado actualizado correctamente.", 
                         "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } else {
+                // Crear nuevo empleado
                 Empleado nuevoEmpleado = new Empleado(id, nombre, primerApellido, 
                         segundoApellido, direccion, telefono, sexo, idDepto, 
                         fechaIngreso, idPuesto, coop, salario);
-                
+
                 empleadoDAO.guardar(nuevoEmpleado);
+
+                if (coop) {
+                    double descuento = Double.parseDouble(txtDescuento.getText().trim());
+                    cooperativaDAO.guardar(new Cooperativa(idEmpleado, descuento));
+                }
+
                 JOptionPane.showMessageDialog(this, "Empleado guardado correctamente.", 
                         "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
-            
+
             reiniciarFormulario();
-            
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al guardar empleado: " + e.getMessage(), 
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -545,7 +624,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         }
     }
 
-    private boolean validarCampos() {
+   private boolean validarCampos() {
         if (txtIdEmpleado.getText().trim().isEmpty() ||
             txtNombreEmpleado.getText().trim().isEmpty() ||
             txtPrimerApellido.getText().trim().isEmpty() ||
@@ -555,17 +634,49 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
             txtSalario.getText().trim().isEmpty() ||
             cmbIdDepartamento.getSelectedItem() == null ||
             cmbIdPuesto.getSelectedItem() == null) {
-            
+
             lblMensajeEstado.setText("Todos los campos (*) son obligatorios.");
             lblMensajeEstado.setForeground(Color.RED);
             return false;
+        }
+
+        // Validar cooperativa si está seleccionada
+        if (chkCoop.isSelected()) {
+            String descuentoStr = txtDescuento.getText().trim();
+            if (descuentoStr.isEmpty()) {
+                lblMensajeEstado.setText("El descuento es obligatorio si pertenece a cooperativa.");
+                lblMensajeEstado.setForeground(Color.RED);
+                return false;
+            }
+
+            try {
+                double descuento = Double.parseDouble(descuentoStr);
+                if (descuento < 0) {
+                    lblMensajeEstado.setText("El descuento no puede ser negativo.");
+                    lblMensajeEstado.setForeground(Color.RED);
+                    return false;
+                }
+
+                // Validar que no exceda el 5% del salario
+                double salario = Double.parseDouble(txtSalario.getText().trim());
+                double descuentoMaximo = salario * 0.05;
+
+                if (descuento > descuentoMaximo) {
+                    lblMensajeEstado.setText(String.format("El descuento no puede ser mayor que el 5%% del salario (%.2f).", descuentoMaximo));
+                    lblMensajeEstado.setForeground(Color.RED);
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                lblMensajeEstado.setText("El descuento debe ser un número válido.");
+                lblMensajeEstado.setForeground(Color.RED);
+                return false;
+            }
         }
 
         try {
             Long.parseLong(txtTelefono.getText()); 
             Double.parseDouble(txtSalario.getText()); 
         } catch (NumberFormatException e) {
-            System.out.println(e);
             lblMensajeEstado.setText("Teléfono y salario deben ser números válidos.");
             lblMensajeEstado.setForeground(Color.RED);
             return false;
@@ -573,7 +684,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
 
         String selectedDepartamento = (String) cmbIdDepartamento.getSelectedItem();
         Integer idDepto = Integer.parseInt(selectedDepartamento.split(" - ")[0]);
-        
+
         try {
             Optional<Departamento> depto = departamentoDAO.buscarPorId(idDepto);
             if (!depto.isPresent()) {
@@ -585,10 +696,9 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
             return false;
         }
 
-        // Validar que el puesto existe
         String selectedPuesto = (String) cmbIdPuesto.getSelectedItem();
         Integer idPuesto = Integer.parseInt(selectedPuesto.split(" - ")[0]);
-        
+
         try {
             Optional<Puesto> puesto = puestoDAO.buscarPorId(idPuesto);
             if (!puesto.isPresent()) {
@@ -601,7 +711,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         }
 
         return true;
-    }
+}
 
     private void reiniciarFormulario() {
         txtIdEmpleado.setText("");
@@ -611,10 +721,13 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         txtDireccion.setText("");
         txtTelefono.setText("");
         txtSalario.setText("");
+        txtDescuento.setText("");
         cmbGenero.setSelectedIndex(0);
         cmbIdDepartamento.setSelectedIndex(-1);
         cmbIdPuesto.setSelectedIndex(-1);
         chkCoop.setSelected(false);
+        txtDescuento.setEnabled(false);
+        txtDescuento.setOpaque(false);
         lblMensajeEstado.setText("");
         lblFechaIngreso2.setText(dateFormat.format(new Date()));
         txtIdEmpleado.setEnabled(true);
@@ -629,6 +742,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
@@ -644,6 +758,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
     private javax.swing.JPanel lblNombreEmpleado;
     private javax.swing.JButton registrar;
     private javax.swing.JButton reiniciar;
+    private javax.swing.JTextField txtDescuento;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtIdEmpleado;
     private javax.swing.JTextField txtNombreEmpleado;
