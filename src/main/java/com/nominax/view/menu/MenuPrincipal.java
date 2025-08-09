@@ -1,5 +1,8 @@
 package com.nominax.view.menu;
 import com.nominax.entity.Usuario;
+import com.nominax.view.consultas.Puestos;
+import com.nominax.view.consultas.Departamentos;
+import com.nominax.view.consultas.Empleados;
 import com.nominax.view.usuario.Login;
 import com.nominax.view.usuario.Registrar;
 import com.nominax.view.departamento.DepartamentoUI;
@@ -56,9 +59,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         itmEmpleadosDCon = new javax.swing.JMenuItem();
         itmEmpleadosPCon = new javax.swing.JMenuItem();
         itmEmpleadosFCon = new javax.swing.JMenuItem();
-        nominas = new javax.swing.JMenu();
-        itmNominaPorFecha = new javax.swing.JMenuItem();
-        itmNominaPorId = new javax.swing.JMenuItem();
         perfil = new javax.swing.JMenu();
         cerrarSesion = new javax.swing.JMenuItem();
 
@@ -138,6 +138,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         consultas.setText("Consultas");
         consultas.setBorderPainted(false);
         consultas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        consultas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                consultasActionPerformed(evt);
+            }
+        });
 
         puestos.setText("Puestos");
         puestos.setToolTipText("Mostrar puestos");
@@ -200,31 +205,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         empleados.add(itmEmpleadosFCon);
 
         consultas.add(empleados);
-
-        nominas.setBackground(new java.awt.Color(0, 0, 0));
-        nominas.setText("Empleados");
-        nominas.setBorderPainted(false);
-        nominas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-
-        itmNominaPorFecha.setText("Nómina por fecha");
-        itmNominaPorFecha.setToolTipText("Filtrar nóminas por fecha");
-        itmNominaPorFecha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itmNominaPorFechaActionPerformed(evt);
-            }
-        });
-        nominas.add(itmNominaPorFecha);
-
-        itmNominaPorId.setText("Nómina por id");
-        itmNominaPorId.setToolTipText("Filtar nómonas por id del empleado");
-        itmNominaPorId.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itmNominaPorIdActionPerformed(evt);
-            }
-        });
-        nominas.add(itmNominaPorId);
-
-        consultas.add(nominas);
 
         menuBarra.add(consultas);
 
@@ -289,7 +269,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_itmEmpleadosActionPerformed
 
     private void itmEmpleadosConActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmEmpleadosConActionPerformed
-        // TODO add your handling code here:
+        Empleados screen = new Empleados();
+        screen.setVisible(true);
+        screen.setLocationRelativeTo(null);
     }//GEN-LAST:event_itmEmpleadosConActionPerformed
 
     private void cerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarSesionActionPerformed
@@ -320,20 +302,16 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_itmEmpleadosFConActionPerformed
 
     private void departamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_departamentosActionPerformed
-        // TODO add your handling code here:
+        Departamentos screen = new Departamentos();
+        screen.setVisible(true);
+        screen.setLocationRelativeTo(null);
     }//GEN-LAST:event_departamentosActionPerformed
 
     private void puestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_puestosActionPerformed
-        // TODO add your handling code here:
+        Puestos screen = new Puestos();
+        screen.setVisible(true);
+        screen.setLocationRelativeTo(null);
     }//GEN-LAST:event_puestosActionPerformed
-
-    private void itmNominaPorFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmNominaPorFechaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_itmNominaPorFechaActionPerformed
-
-    private void itmNominaPorIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmNominaPorIdActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_itmNominaPorIdActionPerformed
 
     private void itmDepartamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmDepartamentosActionPerformed
         try {
@@ -344,6 +322,10 @@ public class MenuPrincipal extends javax.swing.JFrame {
             Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_itmDepartamentosActionPerformed
+
+    private void consultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_consultasActionPerformed
 
    public void restringirOpciones() 
    { 
@@ -364,14 +346,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem itmEmpleadosDCon;
     private javax.swing.JMenuItem itmEmpleadosFCon;
     private javax.swing.JMenuItem itmEmpleadosPCon;
-    private javax.swing.JMenuItem itmNominaPorFecha;
-    private javax.swing.JMenuItem itmNominaPorId;
     private javax.swing.JMenuItem itmPuestos;
     private javax.swing.JMenuItem itmUsuarios;
     private javax.swing.JMenu mantenimientos;
     private javax.swing.JMenuBar menuBarra;
     private javax.swing.JLabel nombreLabel;
-    private javax.swing.JMenu nominas;
     private javax.swing.JMenu perfil;
     private javax.swing.JMenu procesos;
     private javax.swing.JMenuItem puestos;

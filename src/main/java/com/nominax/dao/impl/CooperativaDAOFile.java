@@ -2,20 +2,22 @@ package com.nominax.dao.impl;
 
 import com.nominax.dao.CooperativaDAO;
 import com.nominax.entity.Cooperativa;
+import com.nominax.util.ManejadorArchivos;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CooperativaDAOFile implements CooperativaDAO {
     
-    private static final String ARCHIVO_COOPERATIVAS = "cooperativas.txt";
-    private static final String SEPARADOR = ",";
+    private static final String ARCHIVO = "cooperativas.txt";
+    private static final String SEPARADOR = ";";
     
     public CooperativaDAOFile() {
         crearArchivoSiNoExiste();
     }
     
     private void crearArchivoSiNoExiste() {
-        File archivo = new File(ARCHIVO_COOPERATIVAS);
+        File archivo = new File(ARCHIVO);
         if (!archivo.exists()) {
             try {
                 archivo.createNewFile();
@@ -27,17 +29,16 @@ public class CooperativaDAOFile implements CooperativaDAO {
     
     @Override
     public void guardar(Cooperativa cooperativa) throws IOException {
-        // Verificar si ya existe
         Optional<Cooperativa> existente = buscarPorIdEmpleado(cooperativa.getIdEmpleado());
         if (existente.isPresent()) {
             throw new IOException("Ya existe una cooperativa para el empleado ID: " + cooperativa.getIdEmpleado());
         }
         
-        try (FileWriter fw = new FileWriter(ARCHIVO_COOPERATIVAS, true);
-             PrintWriter pw = new PrintWriter(fw)) {
-            
-            pw.println(cooperativaToString(cooperativa));
+        if (cooperativa.getId() == null) {
+            cooperativa.setId(generarProximoId());
         }
+        String linea = cooperativaToString(cooperativa);
+        ManejadorArchivos.agregarLinea(ARCHIVO, linea);
     }
     
     @Override
@@ -58,23 +59,12 @@ public class CooperativaDAOFile implements CooperativaDAO {
     
     @Override
     public List<Cooperativa> obtenerTodos() throws IOException {
+        List<String> lineas = ManejadorArchivos.leerTodasLasLineas(ARCHIVO);
         List<Cooperativa> cooperativas = new ArrayList<>();
         
-        try (BufferedReader br = new BufferedReader(new FileReader(ARCHIVO_COOPERATIVAS))) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                if (!linea.trim().isEmpty()) {
-                    try {
-                        Cooperativa cooperativa = stringToCooperativa(linea);
-                        cooperativas.add(cooperativa);
-                    } catch (Exception e) {
-                        System.err.println("Error parseando línea: " + linea + " - " + e.getMessage());
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            // Si el archivo no existe, retornar lista vacía
-            return cooperativas;
+        
+        for (String linea : lineas) {
+            cooperativas.add(stringToCooperativa(linea));
         }
         
         return cooperativas;
@@ -82,22 +72,25 @@ public class CooperativaDAOFile implements CooperativaDAO {
     
     @Override
     public void actualizar(Cooperativa cooperativa) throws IOException {
-        List<Cooperativa> cooperativas = obtenerTodos();
-        boolean encontrado = false;
+        List<String> lineas = ManejadorArchivos.leerTodasLasLineas(ARCHIVO);
+        List<String> lineasActualizadas = new ArrayList<>();
         
-        for (int i = 0; i < cooperativas.size(); i++) {
-            if (cooperativas.get(i).getIdEmpleado().equals(cooperativa.getIdEmpleado())) {
-                cooperativas.set(i, cooperativa);
+        boolean encontrado = false;
+        for (String linea : lineas) {
+            String[] partes = linea.split(SEPARADOR);
+            if (partes.length == 4 && partes[1].equals(String.valueOf(cooperativa.getIdEmpleado()))) {
+                lineasActualizadas.add(cooperativaToString(cooperativa));
                 encontrado = true;
-                break;
+            } else {
+                lineasActualizadas.add(linea);
             }
         }
         
         if (!encontrado) {
-            throw new IOException("Cooperativa no encontrada para el empleado ID: " + cooperativa.getIdEmpleado());
+            lineasActualizadas.add(cooperativaToString(cooperativa));
         }
         
-        guardarTodos(cooperativas);
+        ManejadorArchivos.escribirTodasLasLineas(ARCHIVO, lineasActualizadas);
     }
     
     @Override
@@ -109,17 +102,35 @@ public class CooperativaDAOFile implements CooperativaDAO {
             throw new IOException("Cooperativa no encontrada para el empleado ID: " + idEmpleado);
         }
         
-        guardarTodos(cooperativas);
+       // guardarTodos(cooperativas);
     }
     
-    private void guardarTodos(List<Cooperativa> cooperativas) throws IOException {
-        try (FileWriter fw = new FileWriter(ARCHIVO_COOPERATIVAS, false);
-             PrintWriter pw = new PrintWriter(fw)) {
-            
-            for (Cooperativa cooperativa : cooperativas) {
-                pw.println(cooperativaToString(cooperativa));
-            }
-        }
+    
+    @Override
+    public List<Cooperativa> buscarPorRangoDescuento(Double descuentoMin, Double descuentoMax) throws IOException {
+        return obtenerTodos().stream()
+                .filter(cooperativa -> {
+                    Double descuento = cooperativa.getDescuento();
+                    return descuento >= descuentoMin && descuento <= descuentoMax;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Cooperativa> buscarPorRangoBalance(Double balanceMin, Double balanceMax) throws IOException {
+        return obtenerTodos().stream()
+                .filter(cooperativa -> {
+                    Double balance = cooperativa.getBalance();
+                    return balance >= balanceMin && balance <= balanceMax;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Cooperativa> buscarCooperativasActivas() throws IOException {
+        return obtenerTodos().stream()
+                .filter(cooperativa -> cooperativa.getBalance() > 0)
+                .collect(Collectors.toList());
     }
     
     private String cooperativaToString(Cooperativa cooperativa) {
@@ -159,13 +170,5 @@ public class CooperativaDAOFile implements CooperativaDAO {
                 .mapToInt(Cooperativa::getId)
                 .max()
                 .orElse(0) + 1;
-    }
-    
-    // Método sobrecargado de guardar que genera automáticamente el ID
-    public void guardarConIdAutomatico(Cooperativa cooperativa) throws IOException {
-        if (cooperativa.getId() == null) {
-            cooperativa.setId(generarProximoId());
-        }
-        guardar(cooperativa);
     }
 }

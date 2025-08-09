@@ -474,7 +474,6 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
             Optional<Empleado> empleadoEncontrado = empleadoDAO.buscarPorId(id);
 
             if (empleadoEncontrado.isPresent()) {
-                // Actualizar empleado existente
                 Empleado empleado = empleadoEncontrado.get();
                 empleado.setNombre(nombre);
                 empleado.setApellidoPat(primerApellido);
@@ -489,19 +488,16 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
 
                 empleadoDAO.actualizar(empleado);
 
-                // Manejar cooperativa para empleado existente
                 Optional<Cooperativa> coopExistente = cooperativaDAO.buscarPorIdEmpleado(idEmpleado);
 
                 if (coop) {
                     double descuento = Double.parseDouble(txtDescuento.getText().trim());
 
                     if (coopExistente.isPresent()) {
-                        // Actualizar cooperativa existente
                         Cooperativa cooperativa = coopExistente.get();
                         cooperativa.setDescuento(descuento);
                         cooperativaDAO.actualizar(cooperativa);
                     } else {
-                        // Crear nueva cooperativa
                         cooperativaDAO.guardar(new Cooperativa(idEmpleado, descuento));
                     }
                 } else {
@@ -514,7 +510,6 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Empleado actualizado correctamente.", 
                         "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                // Crear nuevo empleado
                 Empleado nuevoEmpleado = new Empleado(id, nombre, primerApellido, 
                         segundoApellido, direccion, telefono, sexo, idDepto, 
                         fechaIngreso, idPuesto, coop, salario);
@@ -600,6 +595,9 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                 
                 chkCoop.setSelected(empleado.getCoop());
                 lblFechaIngreso2.setText(dateFormat.format(empleado.getFechaIngreso()));
+                
+                double descuento = cooperativaDAO.buscarPorIdEmpleado(Integer.valueOf(empleado.getId())).get().getDescuento();
+                txtDescuento.setText(String.valueOf(descuento));
                 
                 lblMensajeEstado.setText("Modificando empleado existente");
                 lblMensajeEstado.setForeground(new Color(255, 140, 0));

@@ -10,10 +10,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-/**
- *
- * @author osvfj
- */
 
 public class DepartamentoDAOFile implements DepartamentoDAO {
 

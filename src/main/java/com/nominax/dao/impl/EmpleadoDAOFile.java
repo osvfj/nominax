@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -51,8 +52,15 @@ public class EmpleadoDAOFile implements EmpleadoDAO {
 
     @Override
     public void guardar(Empleado empleado) throws IOException {
-        String linea = empleadoAString(empleado);
-        ManejadorArchivos.agregarLinea(ARCHIVO, linea);
+        List<Empleado> empleadosActuales = obtenerTodos(); 
+
+        empleadosActuales.add(empleado); 
+        
+        List<String> lineasaAguardar = empleadosActuales.stream()
+            .map(this::convertirEmpleadoALinea) 
+            .collect(Collectors.toList());
+
+        ManejadorArchivos.escribirTodasLasLineas(ARCHIVO, lineasaAguardar);
     }
 
     @Override
@@ -64,7 +72,7 @@ public class EmpleadoDAOFile implements EmpleadoDAO {
         for (String linea : lineas) {
             String[] partes = linea.split(SEPARADOR);
             if (partes.length >= 12 && partes[0].equals(empleado.getId())) {
-                lineasActualizadas.add(empleadoAString(empleado));
+                lineasActualizadas.add(convertirEmpleadoALinea(empleado));
                 encontrado = true;
             } else {
                 lineasActualizadas.add(linea);
@@ -72,7 +80,7 @@ public class EmpleadoDAOFile implements EmpleadoDAO {
         }
         
         if (!encontrado) {
-            lineasActualizadas.add(empleadoAString(empleado));
+            lineasActualizadas.add(convertirEmpleadoALinea(empleado));
         }
         
         ManejadorArchivos.escribirTodasLasLineas(ARCHIVO, lineasActualizadas);
@@ -92,7 +100,77 @@ public class EmpleadoDAOFile implements EmpleadoDAO {
         
         ManejadorArchivos.escribirTodasLasLineas(ARCHIVO, lineasFiltradas);
     }
+    
+    @Override
+    public List<Empleado> buscarPorDepartamento(Integer idDepartamento) throws IOException {
+        return obtenerTodos().stream()
+                .filter(empleado -> empleado.getIdDepto().equals(idDepartamento))
+                .collect(Collectors.toList());
+    }
 
+    @Override
+    public List<Empleado> buscarPorPuesto(Integer idPuesto) throws IOException {
+        return obtenerTodos().stream()
+                .filter(empleado -> empleado.getIdPuesto().equals(idPuesto))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Empleado> buscarPorSexo(Boolean sexo) throws IOException {
+        return obtenerTodos().stream()
+                .filter(empleado -> empleado.getSexo().equals(sexo))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Empleado> buscarPorCooperativa(Boolean esMiembroCooperativa) throws IOException {
+        return obtenerTodos().stream()
+                .filter(empleado -> empleado.getCoop().equals(esMiembroCooperativa))
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<Empleado> buscarPorRangoFechaIngreso(Date fechaInicio, Date fechaFin) throws IOException {
+        return obtenerTodos().stream()
+                .filter(empleado -> {
+                    Date fechaIngreso = empleado.getFechaIngreso();
+                    return !fechaIngreso.before(fechaInicio) && !fechaIngreso.after(fechaFin);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Empleado> buscarPorRangoSalario(Double salarioMin, Double salarioMax) throws IOException {
+        return obtenerTodos().stream()
+                .filter(empleado -> {
+                    Double salario = empleado.getSalario();
+                    return salario >= salarioMin && salario <= salarioMax;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Empleado> buscarPorNombre(String nombre) throws IOException {
+        String nombreBusqueda = nombre.toLowerCase();
+        return obtenerTodos().stream()
+                .filter(empleado -> 
+                    empleado.getNombre().toLowerCase().contains(nombreBusqueda) ||
+                    empleado.getApellidoPat().toLowerCase().contains(nombreBusqueda) ||
+                    empleado.getApellidoMat().toLowerCase().contains(nombreBusqueda)
+                )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public long contarPorDepartamento(Integer idDepartamento) throws IOException {
+        return buscarPorDepartamento(idDepartamento).size();
+    }
+
+    @Override
+    public long contarPorPuesto(Integer idPuesto) throws IOException {
+        return buscarPorPuesto(idPuesto).size();
+    }
+    
+    
     private Empleado parsearEmpleado(String[] partes) {
         try {
             String id = partes[0];
@@ -115,7 +193,7 @@ public class EmpleadoDAOFile implements EmpleadoDAO {
         }
     }
 
-    private String empleadoAString(Empleado empleado) {
+    private String convertirEmpleadoALinea(Empleado empleado) {
         return String.join(SEPARADOR,
                 empleado.getId(),
                 empleado.getNombre(),

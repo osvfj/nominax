@@ -16,4 +16,8 @@ public interface CooperativaDAO {
     List<Cooperativa> obtenerTodos() throws IOException;
     void actualizar(Cooperativa cooperativa) throws IOException;
     void eliminar(Integer idEmpleado) throws IOException;
+    
+    List<Cooperativa> buscarPorRangoDescuento(Double descuentoMin, Double descuentoMax) throws IOException;
+    List<Cooperativa> buscarPorRangoBalance(Double balanceMin, Double balanceMax) throws IOException;
+    List<Cooperativa> buscarCooperativasActivas() throws IOException;
 }
