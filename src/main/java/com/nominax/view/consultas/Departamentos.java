@@ -20,6 +20,7 @@ public class Departamentos extends javax.swing.JFrame {
     public Departamentos() {
         initComponents();
         this.setTitle("Lista de departamentos");
+        this.setResizable(false);
         try {
             departamentos = db.obtenerTodos();
         } catch (IOException ex) {

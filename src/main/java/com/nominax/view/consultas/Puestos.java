@@ -20,6 +20,7 @@ public class Puestos extends javax.swing.JFrame {
     public Puestos() {
         initComponents();
         this.setTitle("Lista de puestos");
+        this.setResizable(false);
         try {
             puestos = db.obtenerTodos();
         } catch (IOException ex) {
