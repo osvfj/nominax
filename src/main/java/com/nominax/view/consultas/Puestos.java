@@ -3,6 +3,7 @@ package com.nominax.view.consultas;
 import com.nominax.dao.PuestoDAO;
 import com.nominax.dao.impl.PuestoDAOFile;
 import com.nominax.entity.Puesto;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -15,22 +16,27 @@ public class Puestos extends javax.swing.JFrame {
      * Creates new form Puestos
      */
     static final PuestoDAO db = new PuestoDAOFile();
+    static List<Puesto> puestos;
     public Puestos() {
         initComponents();
         this.setTitle("Lista de puestos");
-        cargarDatos();
+        try {
+            puestos = db.obtenerTodos();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error al cargar los puestos: " + ex.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
         
     }
 
     
     
-    private void cargarDatos() {
-        try {
-            DefaultTableModel modelo = (DefaultTableModel) modeloTabla.getModel();
-            modelo.setRowCount(0);
-
-            List<Puesto> puestos = db.obtenerTodos();
-            
+    private void cargarDatos(String query, Integer limite) throws IOException {
+        DefaultTableModel modelo = (DefaultTableModel) modeloTabla.getModel();
+        modelo.setRowCount(0);
+        if(query.isEmpty() && limite.equals(0)){
             if (puestos != null) {
                 for (Puesto puesto : puestos) {
                     Object[] fila = {
@@ -40,12 +46,19 @@ public class Puestos extends javax.swing.JFrame {
                     modelo.addRow(fila);
                 }
             }
-            
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error al cargar los puestos: " + e.getMessage(), 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+            return; 
+        }
+        if(!query.isEmpty() || limite != null){
+            List<Puesto> puestosFiltrados = puestos.subList(0, !limite.equals(0) ? limite : puestos.size());
+            for (Puesto puesto : puestosFiltrados) {
+                if(puesto.getNombre().toLowerCase().contains(query.toLowerCase())){
+                    Object[] fila = {
+                        puesto.getId(),
+                        puesto.getNombre()
+                    };
+                    modelo.addRow(fila);
+                }
+            }
         }
     }
     
@@ -60,10 +73,17 @@ public class Puestos extends javax.swing.JFrame {
 
         jScrollPane2 = new javax.swing.JScrollPane();
         modeloTabla = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        txtUsuario = new javax.swing.JTextField();
+        limitador = new javax.swing.JSpinner();
+        btnConsultar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        modeloTabla.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        modeloTabla.setBackground(new java.awt.Color(165, 153, 249));
+        modeloTabla.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         modeloTabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -87,7 +107,78 @@ public class Puestos extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        modeloTabla.setRowHeight(40);
+        modeloTabla.setSelectionBackground(new java.awt.Color(153, 153, 255));
+        modeloTabla.setShowVerticalLines(true);
+        modeloTabla.getTableHeader().setResizingAllowed(false);
         jScrollPane2.setViewportView(modeloTabla);
+
+        txtUsuario.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtUsuario.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, null, new java.awt.Color(102, 102, 255)));
+        txtUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsuarioActionPerformed(evt);
+            }
+        });
+
+        limitador.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true));
+        limitador.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                limitadorStateChanged(evt);
+            }
+        });
+
+        btnConsultar.setBackground(new java.awt.Color(102, 102, 255));
+        btnConsultar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnConsultar.setForeground(new java.awt.Color(255, 255, 255));
+        btnConsultar.setText("Consultar");
+        btnConsultar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, null, new java.awt.Color(102, 102, 255), new java.awt.Color(102, 102, 255)));
+        btnConsultar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnConsultar.setDefaultCapable(false);
+        btnConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setText("Limitador");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setText("Filtrar");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(limitador, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(9, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnConsultar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(limitador, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -95,19 +186,52 @@ public class Puestos extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(35, 35, 35)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(116, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUsuarioActionPerformed
+
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        try {
+            String busqueda = txtUsuario.getText();
+            Integer limite = Integer.parseInt(limitador.getValue().toString());
+                 
+            cargarDatos(busqueda, limite);
+        } catch (IOException ex) {
+              JOptionPane.showMessageDialog(this, 
+                    "Error al cargar los puestos: " + ex.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnConsultarActionPerformed
+
+    private void limitadorStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_limitadorStateChanged
+        char c = limitador.getValue().toString().charAt(0);
+        if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE) {
+            limitador.setValue(0);
+        }
+        
+        if(Integer.parseInt(limitador.getValue().toString()) > puestos.size()){
+            limitador.setValue(Integer.valueOf(limitador.getValue().toString()) - 1);
+        }
+    }//GEN-LAST:event_limitadorStateChanged
 
    
     
@@ -147,7 +271,13 @@ public class Puestos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnConsultar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSpinner limitador;
     private javax.swing.JTable modeloTabla;
+    private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }
