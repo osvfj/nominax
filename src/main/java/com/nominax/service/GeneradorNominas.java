@@ -27,7 +27,7 @@ public class GeneradorNominas {
         this.generadorPDF = new GeneradorPDFNomina();
     }
 
-    public void generarNominas(int mes, int anio) throws IOException {
+    public void generarNominas(int mes, int anio) throws IOException, IllegalStateException {
         if (nominaDAO.existeNominaMesAnio(mes, anio)) {
             throw new IllegalStateException(
                 "Ya existe una nómina generada para " + mes + "/" + anio

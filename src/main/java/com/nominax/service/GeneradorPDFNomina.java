@@ -5,6 +5,7 @@ import com.nominax.entity.*;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.nominax.dao.impl.CooperativaDAOFile;
+import com.nominax.util.ExploradorArchivos;
 import com.nominax.util.ManejadorArchivos;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,6 +41,9 @@ public class GeneradorPDFNomina {
                 generarPDFNomina(nomina, empleado, mes, anio, rutaDirectorioNominas);
             }
         }
+        
+        ExploradorArchivos.abrirExploradorEnRuta(ManejadorArchivos.obtenerRutaBase() + 
+                                File.separator + rutaDirectorioNominas);
     }
 
     private void generarPDFNomina(Nomina nomina, Empleado empleado, int mes, int anio, 

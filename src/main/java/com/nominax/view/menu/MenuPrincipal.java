@@ -8,6 +8,7 @@ import com.nominax.view.usuario.Login;
 import com.nominax.view.usuario.Registrar;
 import com.nominax.view.departamento.DepartamentoUI;
 import com.nominax.view.empleado.MantenimientoEmpleados;
+import com.nominax.view.nomina.GenerarNomina;
 import com.nominax.view.puesto.PuestoUI;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -293,7 +294,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_cerrarSesionActionPerformed
 
     private void generarNominaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generarNominaActionPerformed
-        // TODO add your handling code here:
+        GenerarNomina screen = new GenerarNomina();
+        screen.setVisible(true);
+        screen.setLocationRelativeTo(null);
     }//GEN-LAST:event_generarNominaActionPerformed
 
     private void reversarNominaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reversarNominaActionPerformed
