@@ -23,7 +23,18 @@ public final class ManejadorArchivos {
     private ManejadorArchivos() {
         
     }
+    
+    public static String obtenerRutaBase() {
+        return userHome + File.separator + nombreDelDirectorio;
+    }
 
+    public static void crearDirectorioSiNoExiste(String rutaDirectorio) {
+        File directorio = new File(obtenerRutaBase(), rutaDirectorio);
+        if (!directorio.exists()) {
+            directorio.mkdirs();
+        }
+    }
+    
     public static boolean isDirectorioInicializado() {
         File directorioBase = new File(userHome + File.separator + nombreDelDirectorio);
         return directorioBase.exists() && directorioBase.isDirectory();
@@ -31,7 +42,7 @@ public final class ManejadorArchivos {
 
     public static List<String> leerTodasLasLineas(String rutaArchivo) throws IOException {
         File archivo = new File(
-            userHome + File.separator + nombreDelDirectorio,
+            obtenerRutaBase(),
             rutaArchivo
         );
 
