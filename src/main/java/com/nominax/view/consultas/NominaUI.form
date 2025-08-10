@@ -114,11 +114,9 @@
                   <EmptySpace pref="35" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                       <Component id="txtUserId" pref="43" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="filtrarPor" max="32767" attributes="0"/>
-                          <Component id="btnConsultar" pref="43" max="32767" attributes="0"/>
-                          <Component id="fechaSeleccionada" alignment="1" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="filtrarPor" max="32767" attributes="0"/>
+                      <Component id="btnConsultar" pref="43" max="32767" attributes="0"/>
+                      <Component id="fechaSeleccionada" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>

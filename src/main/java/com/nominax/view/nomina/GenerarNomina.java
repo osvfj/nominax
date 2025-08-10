@@ -136,19 +136,19 @@ public class GenerarNomina extends javax.swing.JFrame {
             
             if(confirmar == JOptionPane.YES_OPTION){
                 try {
-            generadorDeNomina.generarNominas(mes, anio);
-        } catch (IllegalStateException ex) {
-            JOptionPane.showMessageDialog(this,
-                String.format("Ya existe un reporte para este mes"),
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-            );
-        }       catch (IOException ex) {
-                     JOptionPane.showMessageDialog(this,
-                String.format("Erorr al consultar la base de datos"),
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-            );
+                    generadorDeNomina.generarNominas(mes, anio);
+               } catch (IllegalStateException ex) {
+                    JOptionPane.showMessageDialog(this,
+                        String.format("Ya existe un reporte para este mes"),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this,
+                        String.format("Erorr al consultar la base de datos"),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
                 }
             }
     }//GEN-LAST:event_btnConsultarActionPerformed

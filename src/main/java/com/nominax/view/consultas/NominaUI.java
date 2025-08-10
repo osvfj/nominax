@@ -199,7 +199,7 @@ public class NominaUI extends javax.swing.JFrame {
                     int mes = calendario.get(Calendar.MONTH) + 1;
                     int anio = calendario.get(Calendar.YEAR);
 
-                    List<Nomina> nominas = this.db.buscarPorMesYAnio(mes, (anio % 100));
+                    List<Nomina> nominas = this.db.buscarPorMesYAnio(mes, anio);
                     agregarFilas(modelo, nominas);
                     break;
                 case 1:
