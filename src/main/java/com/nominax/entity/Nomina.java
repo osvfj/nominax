@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.nominax.entity;
 import java.util.Date;
 
@@ -11,116 +7,61 @@ import java.util.Date;
  * @author osvfj
  */
 
-
 public class Nomina {
-    private Integer idNomina;
     private String idEmpleado;
-    private Date fechaNomina;
-    private Double salarioBruto;
-    private Double valorAFP;
-    private Double valorARS;
-    private Double valorCoop;
-    private Double valorISR;
-    private Double sueldoNeto;
+    private Date fecha;
+    private Double salarioBase;
+    private Double descuentoARS;
+    private Double descuentoAFP;
+    private Double descuentoCooperativa;
+    private Double descuentoISR;
+    private Double salarioNeto;
     private Boolean statusNomina;
 
-    public Nomina(Integer idNomina, String idEmpleado) {
-        this.idNomina = idNomina;
-        this.idEmpleado = idEmpleado;
-    }
+    public Nomina() {}
 
-    public Nomina(Integer idNomina, String idEmpleado, Date fechaNomina, Double salarioBruto, 
-                  Double valorAFP, Double valorARS, Double valorCoop, Double valorISR, 
-                  Double sueldoNeto, Boolean statusNomina) {
-        this.idNomina = idNomina;
+    public Nomina(String idEmpleado, Date fecha, Double salarioBase, 
+                  Double descuentoARS, Double descuentoAFP, 
+                  Double descuentoCooperativa, Double descuentoISR, 
+                  Double salarioNeto, Boolean statusNomina) {
         this.idEmpleado = idEmpleado;
-        this.fechaNomina = fechaNomina;
-        this.salarioBruto = salarioBruto;
-        this.valorAFP = valorAFP;
-        this.valorARS = valorARS;
-        this.valorCoop = valorCoop;
-        this.valorISR = valorISR;
-        this.sueldoNeto = sueldoNeto;
+        this.fecha = fecha;
+        this.salarioBase = salarioBase;
+        this.descuentoARS = descuentoARS;
+        this.descuentoAFP = descuentoAFP;
+        this.descuentoCooperativa = descuentoCooperativa;
+        this.descuentoISR = descuentoISR;
+        this.salarioNeto = salarioNeto;
         this.statusNomina = statusNomina;
     }
 
-    public Integer getIdNomina() {
-        return idNomina;
+    // Getters y setters
+    public String getIdEmpleado() { return idEmpleado; }
+    public void setIdEmpleado(String idEmpleado) { this.idEmpleado = idEmpleado; }
+
+    public Date getFecha() { return fecha; }
+    public void setFecha(Date fecha) { this.fecha = fecha; }
+
+    public Double getSalarioBase() { return salarioBase; }
+    public void setSalarioBase(Double salarioBase) { this.salarioBase = salarioBase; }
+
+    public Double getDescuentoARS() { return descuentoARS; }
+    public void setDescuentoARS(Double descuentoARS) { this.descuentoARS = descuentoARS; }
+
+    public Double getDescuentoAFP() { return descuentoAFP; }
+    public void setDescuentoAFP(Double descuentoAFP) { this.descuentoAFP = descuentoAFP; }
+
+    public Double getDescuentoCooperativa() { return descuentoCooperativa; }
+    public void setDescuentoCooperativa(Double descuentoCooperativa) { 
+        this.descuentoCooperativa = descuentoCooperativa; 
     }
 
-    public void setIdNomina(Integer idNomina) {
-        this.idNomina = idNomina;
-    }
+    public Double getDescuentoISR() { return descuentoISR; }
+    public void setDescuentoISR(Double descuentoISR) { this.descuentoISR = descuentoISR; }
 
-    public String getIdEmpleado() {
-        return idEmpleado;
-    }
+    public Double getSalarioNeto() { return salarioNeto; }
+    public void setSalarioNeto(Double salarioNeto) { this.salarioNeto = salarioNeto; }
 
-    public void setIdEmpleado(String idEmpleado) {
-        this.idEmpleado = idEmpleado;
-    }
-
-    public Date getFechaNomina() {
-        return fechaNomina;
-    }
-
-    public void setFechaNomina(Date fechaNomina) {
-        this.fechaNomina = fechaNomina;
-    }
-
-    public Double getSalarioBruto() {
-        return salarioBruto;
-    }
-
-    public void setSalarioBruto(Double salarioBruto) {
-        this.salarioBruto = salarioBruto;
-    }
-
-    public Double getValorAFP() {
-        return valorAFP;
-    }
-
-    public void setValorAFP(Double valorAFP) {
-        this.valorAFP = valorAFP;
-    }
-
-    public Double getValorARS() {
-        return valorARS;
-    }
-
-    public void setValorARS(Double valorARS) {
-        this.valorARS = valorARS;
-    }
-
-    public Double getValorCoop() {
-        return valorCoop;
-    }
-
-    public void setValorCoop(Double valorCoop) {
-        this.valorCoop = valorCoop;
-    }
-
-    public Double getValorISR() {
-        return valorISR;
-    }
-
-    public void setValorISR(Double valorISR) {
-        this.valorISR = valorISR;
-    }
-
-    public Double getSueldoNeto() {
-        return sueldoNeto;
-    }
-
-    public void setSueldoNeto(Double sueldoNeto) {
-        this.sueldoNeto = sueldoNeto;
-    }
-
-    public Boolean getStatusNomina() {
-        return statusNomina;
-    }
-
-    public void setStatusNomina(Boolean statusNomina) {
-        this.statusNomina = statusNomina;
-    }
+    public Boolean getStatusNomina() { return statusNomina; }
+    public void setStatusNomina(Boolean statusNomina) { this.statusNomina = statusNomina; }
 }

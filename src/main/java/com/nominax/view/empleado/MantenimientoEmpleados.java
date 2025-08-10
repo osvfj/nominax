@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class MantenimientoEmpleados extends javax.swing.JFrame {
 
@@ -87,6 +89,8 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         lblMensajeEstado = new javax.swing.JLabel();
         txtDescuento = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        txtMonto = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -281,8 +285,19 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
 
         lblMensajeEstado.setText("                          ");
 
+        txtDescuento.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDescuentoKeyTyped(evt);
+            }
+        });
+
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Descuento*");
+
+        txtMonto.setEnabled(false);
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setText("Monto*");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -304,14 +319,19 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                         .addComponent(reiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(registrar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtDescuento, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtDescuento, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chkCoop, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblMensajeEstado, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(chkCoop)
-                            .addComponent(lblMensajeEstado)
-                            .addComponent(jLabel5))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(txtMonto))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -332,10 +352,16 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addComponent(chkCoop)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(130, 130, 130)
                 .addComponent(lblMensajeEstado)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -537,6 +563,44 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         reiniciarFormulario();
     }//GEN-LAST:event_reiniciarActionPerformed
 
+    private void txtDescuentoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescuentoKeyTyped
+        txtDescuento.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                updateMonto();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                updateMonto();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                // Not used for plain text fields
+            }
+
+            private void updateMonto() {
+                String salarioText = txtSalario.getText().trim();
+                String descuentoText = txtDescuento.getText().trim();
+
+                if (salarioText.isEmpty() || descuentoText.isEmpty()) {
+                    txtMonto.setText("");
+                    return;
+                }
+
+                try {
+                    double salario = Double.parseDouble(salarioText);
+                    double descuentoPorcentaje = Double.parseDouble(descuentoText);
+
+                    double descuento = salario * (descuentoPorcentaje / 100.0);
+                    txtMonto.setText(String.format("%.2f", descuento));
+
+
+                } catch (NumberFormatException ex) {
+                    txtMonto.setText("Invalid Input");
+                }
+            }
+        });
+    }//GEN-LAST:event_txtDescuentoKeyTyped
+
 
     private void cargarCombos() {
         cargarComboDepartamentos();
@@ -657,10 +721,11 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
 
                 // Validar que no exceda el 5% del salario
                 double salario = Double.parseDouble(txtSalario.getText().trim());
-                double descuentoMaximo = salario * 0.05;
+                double porcentajeDescuentoIngresado = Double.parseDouble(txtDescuento.getText().trim()); 
 
-                if (descuento > descuentoMaximo) {
-                    lblMensajeEstado.setText(String.format("El descuento no puede ser mayor que el 5%% del salario (%.2f).", descuentoMaximo));
+                if (porcentajeDescuentoIngresado > 5.0) {
+                    double descuentoMaximoCalculado = salario * 0.05;
+                    lblMensajeEstado.setText(String.format("El descuento no puede ser mayor que el 5%% del salario (%.2f).", descuentoMaximoCalculado));
                     lblMensajeEstado.setForeground(Color.RED);
                     return false;
                 }
@@ -741,6 +806,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
@@ -759,6 +825,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
     private javax.swing.JTextField txtDescuento;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtIdEmpleado;
+    private javax.swing.JTextField txtMonto;
     private javax.swing.JTextField txtNombreEmpleado;
     private javax.swing.JTextField txtPrimerApellido;
     private javax.swing.JTextField txtSalario;
