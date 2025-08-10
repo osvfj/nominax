@@ -3,6 +3,7 @@ import com.nominax.entity.Usuario;
 import com.nominax.view.consultas.Puestos;
 import com.nominax.view.consultas.Departamentos;
 import com.nominax.view.consultas.Empleados;
+import com.nominax.view.consultas.NominaUI;
 import com.nominax.view.usuario.Login;
 import com.nominax.view.usuario.Registrar;
 import com.nominax.view.departamento.DepartamentoUI;
@@ -54,6 +55,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         consultas = new javax.swing.JMenu();
         puestos = new javax.swing.JMenuItem();
         departamentos = new javax.swing.JMenuItem();
+        nomina = new javax.swing.JMenuItem();
         empleados = new javax.swing.JMenu();
         itmEmpleadosCon = new javax.swing.JMenuItem();
         itmEmpleadosDCon = new javax.swing.JMenuItem();
@@ -161,6 +163,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
             }
         });
         consultas.add(departamentos);
+
+        nomina.setText("Nómina");
+        nomina.setToolTipText("Mostrar departamentos");
+        nomina.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nominaActionPerformed(evt);
+            }
+        });
+        consultas.add(nomina);
 
         empleados.setBackground(new java.awt.Color(0, 0, 0));
         empleados.setText("Empleados");
@@ -327,6 +338,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_consultasActionPerformed
 
+    private void nominaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nominaActionPerformed
+        NominaUI screen = new NominaUI();
+        screen.setVisible(true);
+        screen.setLocationRelativeTo(null);
+    }//GEN-LAST:event_nominaActionPerformed
+
    public void restringirOpciones() 
    { 
         itmUsuarios.setEnabled(false);
@@ -351,6 +368,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu mantenimientos;
     private javax.swing.JMenuBar menuBarra;
     private javax.swing.JLabel nombreLabel;
+    private javax.swing.JMenuItem nomina;
     private javax.swing.JMenu perfil;
     private javax.swing.JMenu procesos;
     private javax.swing.JMenuItem puestos;
