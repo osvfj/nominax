@@ -13,18 +13,7 @@ public class CooperativaDAOFile implements CooperativaDAO {
     private static final String SEPARADOR = ";";
     
     public CooperativaDAOFile() {
-        crearArchivoSiNoExiste();
-    }
-    
-    private void crearArchivoSiNoExiste() {
-        File archivo = new File(ARCHIVO);
-        if (!archivo.exists()) {
-            try {
-                archivo.createNewFile();
-            } catch (IOException e) {
-                System.err.println("Error creando archivo de cooperativas: " + e.getMessage());
-            }
-        }
+      
     }
     
     @Override
