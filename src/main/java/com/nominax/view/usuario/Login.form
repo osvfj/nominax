@@ -45,6 +45,9 @@
           <Color blue="ff" green="99" red="99" type="rgb"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.nominax.view.FondoPanel();"/>
+      </AuxValues>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -70,7 +73,7 @@
         <Component class="javax.swing.JLabel" name="marca">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Harlow Solid Italic" size="48" style="3"/>
+              <Font name="Harlow Solid Italic" size="50" style="3"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>

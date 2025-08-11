@@ -24,14 +24,16 @@ public class MenuPrincipal extends javax.swing.JFrame {
     {
         initComponents();
         this.setTitle("Nominax: Home");
-        setExtendedState(this.MAXIMIZED_BOTH);
- 
+        this.setResizable(false);
+        
         if (nivelAcceso != 0) 
         { 
             restringirOpciones();
         }
         
-        nombreLabel.setText(usuario.getNombre() + ", eres un " + (nivelAcceso == 0 ? "admin" : "usuario"));
+     nombreLabel.setText(usuario.getNombre());
+     roleLabel.setText(usuario.getNivelDeAcceso() == 0 ? "Admin" : "Usuario");
+
     }
 
     /**
@@ -43,7 +45,10 @@ public class MenuPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        user = new com.nominax.view.FondoPanel();
+        userIcon = new javax.swing.JLabel();
         nombreLabel = new javax.swing.JLabel();
+        roleLabel = new javax.swing.JLabel();
         menuBarra = new javax.swing.JMenuBar();
         mantenimientos = new javax.swing.JMenu();
         itmUsuarios = new javax.swing.JMenuItem();
@@ -57,19 +62,49 @@ public class MenuPrincipal extends javax.swing.JFrame {
         puestos = new javax.swing.JMenuItem();
         departamentos = new javax.swing.JMenuItem();
         nomina = new javax.swing.JMenuItem();
-        empleados = new javax.swing.JMenu();
         itmEmpleadosCon = new javax.swing.JMenuItem();
-        itmEmpleadosDCon = new javax.swing.JMenuItem();
-        itmEmpleadosPCon = new javax.swing.JMenuItem();
-        itmEmpleadosFCon = new javax.swing.JMenuItem();
         perfil = new javax.swing.JMenu();
         cerrarSesion = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        nombreLabel.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        userIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user.png"))); // NOI18N
 
-        menuBarra.setBackground(new java.awt.Color(102, 102, 255));
+        nombreLabel.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        nombreLabel.setForeground(new java.awt.Color(204, 204, 255));
+        nombreLabel.setText("name");
+
+        roleLabel.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        roleLabel.setForeground(new java.awt.Color(204, 255, 255));
+        roleLabel.setText("role");
+
+        javax.swing.GroupLayout userLayout = new javax.swing.GroupLayout(user);
+        user.setLayout(userLayout);
+        userLayout.setHorizontalGroup(
+            userLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(userLayout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(userIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(userLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nombreLabel)
+                    .addComponent(roleLabel))
+                .addContainerGap(586, Short.MAX_VALUE))
+        );
+        userLayout.setVerticalGroup(
+            userLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userLayout.createSequentialGroup()
+                .addContainerGap(352, Short.MAX_VALUE)
+                .addGroup(userLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(userLayout.createSequentialGroup()
+                        .addComponent(nombreLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(roleLabel))
+                    .addComponent(userIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44))
+        );
+
+        menuBarra.setBackground(new java.awt.Color(153, 153, 255));
         menuBarra.setForeground(new java.awt.Color(255, 255, 255));
 
         mantenimientos.setForeground(new java.awt.Color(255, 255, 255));
@@ -174,11 +209,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         });
         consultas.add(nomina);
 
-        empleados.setBackground(new java.awt.Color(0, 0, 0));
-        empleados.setText("Empleados");
-        empleados.setBorderPainted(false);
-        empleados.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-
         itmEmpleadosCon.setText("Empleados");
         itmEmpleadosCon.setToolTipText("Mostrar todos los empleados");
         itmEmpleadosCon.addActionListener(new java.awt.event.ActionListener() {
@@ -186,37 +216,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 itmEmpleadosConActionPerformed(evt);
             }
         });
-        empleados.add(itmEmpleadosCon);
-
-        itmEmpleadosDCon.setToolTipText("Filtrar por departamentos");
-        itmEmpleadosDCon.setLabel("Por departamentos");
-        itmEmpleadosDCon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itmEmpleadosDConActionPerformed(evt);
-            }
-        });
-        empleados.add(itmEmpleadosDCon);
-        itmEmpleadosDCon.getAccessibleContext().setAccessibleDescription("Filtrar empleados por departamentos");
-
-        itmEmpleadosPCon.setText("Por puesto");
-        itmEmpleadosPCon.setToolTipText("Filtrar por puesto");
-        itmEmpleadosPCon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itmEmpleadosPConActionPerformed(evt);
-            }
-        });
-        empleados.add(itmEmpleadosPCon);
-
-        itmEmpleadosFCon.setText("Por fecha de ingreso");
-        itmEmpleadosFCon.setToolTipText("Filtrar por fecha de ingreso");
-        itmEmpleadosFCon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itmEmpleadosFConActionPerformed(evt);
-            }
-        });
-        empleados.add(itmEmpleadosFCon);
-
-        consultas.add(empleados);
+        consultas.add(itmEmpleadosCon);
 
         menuBarra.add(consultas);
 
@@ -242,20 +242,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(157, 157, 157)
-                .addComponent(nombreLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 486, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(157, Short.MAX_VALUE))
+            .addComponent(user, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(182, 182, 182)
-                .addComponent(nombreLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(294, Short.MAX_VALUE))
+            .addComponent(user, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void itmUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmUsuariosActionPerformed
@@ -303,18 +298,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_reversarNominaActionPerformed
 
-    private void itmEmpleadosDConActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmEmpleadosDConActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_itmEmpleadosDConActionPerformed
-
-    private void itmEmpleadosPConActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmEmpleadosPConActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_itmEmpleadosPConActionPerformed
-
-    private void itmEmpleadosFConActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmEmpleadosFConActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_itmEmpleadosFConActionPerformed
-
     private void departamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_departamentosActionPerformed
         Departamentos screen = new Departamentos();
         screen.setVisible(true);
@@ -358,14 +341,10 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem cerrarSesion;
     private javax.swing.JMenu consultas;
     private javax.swing.JMenuItem departamentos;
-    private javax.swing.JMenu empleados;
     private javax.swing.JMenuItem generarNomina;
     private javax.swing.JMenuItem itmDepartamentos;
     private javax.swing.JMenuItem itmEmpleados;
     private javax.swing.JMenuItem itmEmpleadosCon;
-    private javax.swing.JMenuItem itmEmpleadosDCon;
-    private javax.swing.JMenuItem itmEmpleadosFCon;
-    private javax.swing.JMenuItem itmEmpleadosPCon;
     private javax.swing.JMenuItem itmPuestos;
     private javax.swing.JMenuItem itmUsuarios;
     private javax.swing.JMenu mantenimientos;
@@ -376,5 +355,8 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu procesos;
     private javax.swing.JMenuItem puestos;
     private javax.swing.JMenuItem reversarNomina;
+    private javax.swing.JLabel roleLabel;
+    private javax.swing.JPanel user;
+    private javax.swing.JLabel userIcon;
     // End of variables declaration//GEN-END:variables
 }

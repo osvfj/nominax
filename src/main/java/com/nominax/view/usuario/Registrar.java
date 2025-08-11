@@ -33,7 +33,7 @@ public class Registrar extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        izquierda = new javax.swing.JPanel();
+        izquierda = new com.nominax.view.FondoPanel();
         marca = new javax.swing.JLabel();
         derecha = new javax.swing.JPanel();
         register = new javax.swing.JPanel();

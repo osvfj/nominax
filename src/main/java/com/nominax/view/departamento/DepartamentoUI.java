@@ -42,7 +42,7 @@ public class DepartamentoUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        izquierda = new javax.swing.JPanel();
+        izquierda = new com.nominax.view.FondoPanel();
         marca = new javax.swing.JLabel();
         derecha = new javax.swing.JPanel();
         register = new javax.swing.JPanel();
@@ -71,14 +71,14 @@ public class DepartamentoUI extends javax.swing.JFrame {
         izquierdaLayout.setHorizontalGroup(
             izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(izquierdaLayout.createSequentialGroup()
-                .addGap(161, 161, 161)
+                .addGap(107, 107, 107)
                 .addComponent(marca)
-                .addContainerGap(202, Short.MAX_VALUE))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
         izquierdaLayout.setVerticalGroup(
             izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(izquierdaLayout.createSequentialGroup()
-                .addGap(184, 184, 184)
+                .addGap(201, 201, 201)
                 .addComponent(marca)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -213,9 +213,8 @@ public class DepartamentoUI extends javax.swing.JFrame {
         derechaLayout.setHorizontalGroup(
             derechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(derechaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         derechaLayout.setVerticalGroup(
             derechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -232,7 +231,8 @@ public class DepartamentoUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(izquierda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(derecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(derecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

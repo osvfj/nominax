@@ -45,6 +45,9 @@
           <Color blue="ff" green="99" red="99" type="rgb"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.nominax.view.FondoPanel();"/>
+      </AuxValues>
 
       <Layout>
         <DimensionLayout dim="0">

@@ -75,7 +75,6 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         lblIdPuesto4 = new javax.swing.JLabel();
         cmbGenero = new javax.swing.JComboBox<>();
         lblIdDepartamento1 = new javax.swing.JLabel();
-        lblFechaIngreso2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         lblIdDepartamento = new javax.swing.JLabel();
         cmbIdDepartamento = new javax.swing.JComboBox<>();
@@ -91,6 +90,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         txtMonto = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        lblFechaIngreso2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -223,9 +223,9 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(55, 55, 55)
+                .addContainerGap()
                 .addComponent(lblNombreEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -233,8 +233,6 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblNombreEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        lblFechaIngreso2.setText("                                       ");
 
         lblIdDepartamento.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblIdDepartamento.setText("ID Departamento*");
@@ -299,6 +297,8 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Monto*");
 
+        lblFechaIngreso2.setText("                                       ");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -331,7 +331,10 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(txtMonto))))
+                            .addComponent(txtMonto)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblFechaIngreso2)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -367,7 +370,9 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(registrar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(reiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(133, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(lblFechaIngreso2)
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -378,13 +383,10 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblFechaIngreso2)
-                .addGap(0, 0, 0))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblFechaIngreso2, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -405,40 +407,6 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTelefonoFocusLost
 
-    private void chkCoopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkCoopActionPerformed
-        boolean isSelected = chkCoop.isSelected();
-
-        // Si está desactivando la cooperativa, verificar si es un empleado existente
-        if (!isSelected) {
-            String id = txtIdEmpleado.getText().trim();
-            if (!id.isEmpty() && !txtIdEmpleado.isEnabled()) { // Es empleado existente
-                try {
-                    Optional<Cooperativa> coopExistente = cooperativaDAO.buscarPorIdEmpleado(Integer.parseInt(id));
-                    if (coopExistente.isPresent() && coopExistente.get().getBalance() > 0) {
-                        JOptionPane.showMessageDialog(this, 
-                            "No se puede desactivar la cooperativa. El empleado tiene un balance acumulado mayor a cero.",
-                            "Advertencia", JOptionPane.WARNING_MESSAGE);
-                        chkCoop.setSelected(true); // Revertir el cambio
-                        return;
-                    }
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(this, 
-                        "Error al verificar balance de cooperativa: " + e.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                    chkCoop.setSelected(true); // Revertir por seguridad
-                    return;
-                }
-            }
-        }
-
-        txtDescuento.setEnabled(isSelected);
-        txtDescuento.setOpaque(isSelected);
-
-        if (!isSelected) {
-            txtDescuento.setText(""); // Limpiar el campo si se desactiva
-        }
-    }//GEN-LAST:event_chkCoopActionPerformed
-
     private void txtIdEmpleadoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdEmpleadoKeyPressed
          if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             verificarEmpleadoExistente();
@@ -452,9 +420,46 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtIdEmpleadoKeyTyped
 
-     private void txtIdEmpleadoFocusLost(java.awt.event.FocusEvent evt) {
-        verificarEmpleadoExistente();
-    }
+    private void txtDescuentoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescuentoKeyTyped
+        txtDescuento.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                updateMonto();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                updateMonto();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                // Not used for plain text fields
+            }
+
+            private void updateMonto() {
+                String salarioText = txtSalario.getText().trim();
+                String descuentoText = txtDescuento.getText().trim();
+
+                if (salarioText.isEmpty() || descuentoText.isEmpty()) {
+                    txtMonto.setText("");
+                    return;
+                }
+
+                try {
+                    double salario = Double.parseDouble(salarioText);
+                    double descuentoPorcentaje = Double.parseDouble(descuentoText);
+
+                    double descuento = salario * (descuentoPorcentaje / 100.0);
+                    txtMonto.setText(String.format("%.2f", descuento));
+
+                } catch (NumberFormatException ex) {
+                    txtMonto.setText("Invalid Input");
+                }
+            }
+        });
+    }//GEN-LAST:event_txtDescuentoKeyTyped
+
+    private void reiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reiniciarActionPerformed
+        reiniciarFormulario();
+    }//GEN-LAST:event_reiniciarActionPerformed
 
     private void registrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrarActionPerformed
         try {
@@ -482,7 +487,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                 return;
             }
 
-            String id = String.valueOf(idEmpleado); 
+            String id = String.valueOf(idEmpleado);
 
             Long telefono = Long.parseLong(telefonoStr);
             Boolean sexo = cmbGenero.getSelectedIndex() == 0; // M = true, F = false
@@ -533,12 +538,12 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                     }
                 }
 
-                JOptionPane.showMessageDialog(this, "Empleado actualizado correctamente.", 
-                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Empleado actualizado correctamente.",
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                Empleado nuevoEmpleado = new Empleado(id, nombre, primerApellido, 
-                        segundoApellido, direccion, telefono, sexo, idDepto, 
-                        fechaIngreso, idPuesto, coop, salario);
+                Empleado nuevoEmpleado = new Empleado(id, nombre, primerApellido,
+                    segundoApellido, direccion, telefono, sexo, idDepto,
+                    fechaIngreso, idPuesto, coop, salario);
 
                 empleadoDAO.guardar(nuevoEmpleado);
 
@@ -547,59 +552,55 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                     cooperativaDAO.guardar(new Cooperativa(idEmpleado, descuento));
                 }
 
-                JOptionPane.showMessageDialog(this, "Empleado guardado correctamente.", 
-                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Empleado guardado correctamente.",
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
 
             reiniciarFormulario();
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al guardar empleado: " + e.getMessage(), 
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error al guardar empleado: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_registrarActionPerformed
 
-    private void reiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reiniciarActionPerformed
-        reiniciarFormulario();
-    }//GEN-LAST:event_reiniciarActionPerformed
+    private void chkCoopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkCoopActionPerformed
+        boolean isSelected = chkCoop.isSelected();
 
-    private void txtDescuentoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescuentoKeyTyped
-        txtDescuento.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                updateMonto();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                updateMonto();
-            }
-
-            public void changedUpdate(DocumentEvent e) {
-                // Not used for plain text fields
-            }
-
-            private void updateMonto() {
-                String salarioText = txtSalario.getText().trim();
-                String descuentoText = txtDescuento.getText().trim();
-
-                if (salarioText.isEmpty() || descuentoText.isEmpty()) {
-                    txtMonto.setText("");
+        // Si está desactivando la cooperativa, verificar si es un empleado existente
+        if (!isSelected) {
+            String id = txtIdEmpleado.getText().trim();
+            if (!id.isEmpty() && !txtIdEmpleado.isEnabled()) { // Es empleado existente
+                try {
+                    Optional<Cooperativa> coopExistente = cooperativaDAO.buscarPorIdEmpleado(Integer.parseInt(id));
+                    if (coopExistente.isPresent() && coopExistente.get().getBalance() > 0) {
+                        JOptionPane.showMessageDialog(this,
+                            "No se puede desactivar la cooperativa. El empleado tiene un balance acumulado mayor a cero.",
+                            "Advertencia", JOptionPane.WARNING_MESSAGE);
+                        chkCoop.setSelected(true); // Revertir el cambio
+                        return;
+                    }
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this,
+                        "Error al verificar balance de cooperativa: " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    chkCoop.setSelected(true); // Revertir por seguridad
                     return;
                 }
-
-                try {
-                    double salario = Double.parseDouble(salarioText);
-                    double descuentoPorcentaje = Double.parseDouble(descuentoText);
-
-                    double descuento = salario * (descuentoPorcentaje / 100.0);
-                    txtMonto.setText(String.format("%.2f", descuento));
-
-
-                } catch (NumberFormatException ex) {
-                    txtMonto.setText("Invalid Input");
-                }
             }
-        });
-    }//GEN-LAST:event_txtDescuentoKeyTyped
+        }
+
+        txtDescuento.setEnabled(isSelected);
+        txtDescuento.setOpaque(isSelected);
+
+        if (!isSelected) {
+            txtDescuento.setText(""); // Limpiar el campo si se desactiva
+        }
+    }//GEN-LAST:event_chkCoopActionPerformed
+
+     private void txtIdEmpleadoFocusLost(java.awt.event.FocusEvent evt) {
+        verificarEmpleadoExistente();
+    }
 
 
     private void cargarCombos() {

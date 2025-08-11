@@ -33,7 +33,7 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        izquierda = new javax.swing.JPanel();
+        izquierda = new com.nominax.view.FondoPanel();
         marca = new javax.swing.JLabel();
         derecha = new javax.swing.JPanel();
         login = new javax.swing.JPanel();
@@ -51,7 +51,7 @@ public class Login extends javax.swing.JFrame {
 
         izquierda.setBackground(new java.awt.Color(153, 153, 255));
 
-        marca.setFont(new java.awt.Font("Harlow Solid Italic", 3, 48)); // NOI18N
+        marca.setFont(new java.awt.Font("Harlow Solid Italic", 3, 50)); // NOI18N
         marca.setForeground(new java.awt.Color(255, 255, 255));
         marca.setText("Nominax");
 
