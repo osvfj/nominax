@@ -42,7 +42,7 @@ public class GeneradorNominas {
 
         // Crear fecha de nómina (día 30)
         Calendar cal = Calendar.getInstance();
-        cal.set(anio, mes - 1, 30); 
+        cal.set(anio, mes - 1, (mes - 1) == 1 ? 28 : 30); 
         Date fechaNomina = cal.getTime();
 
         List<Nomina> nominas = new ArrayList<>();
