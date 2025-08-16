@@ -49,17 +49,17 @@ public class Departamentos extends javax.swing.JFrame {
             }
             return; 
         }
-        if(!query.isEmpty() || limite != null){
-            List<Departamento> departamentosFiltrados = departamentos.subList(0, !limite.equals(0) ? limite : departamentos.size());
-            for (Departamento puesto : departamentosFiltrados) {
-                if(puesto.getDescripcion().toLowerCase().contains(query.toLowerCase())){
+        if (!query.isEmpty() || limite != null) {
+            departamentos.stream()
+                .filter(departamento -> departamento.getDescripcion().toLowerCase().contains(query.toLowerCase()))
+                .limit(limite != null && !limite.equals(0) ? limite : departamentos.size())
+                .forEach(departamento -> {
                     Object[] fila = {
-                        puesto.getId(),
-                        puesto.getDescripcion()
+                        departamento.getId(),
+                        departamento.getDescripcion()
                     };
                     modelo.addRow(fila);
-                }
-            }
+                });
         }
     }
     

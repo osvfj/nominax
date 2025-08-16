@@ -55,60 +55,53 @@ public class Empleados extends javax.swing.JFrame {
         
         switch (filtroSeleccionado) {
             case "Por nombre":
-                    if(!query.isEmpty() || limite != null){
-                         List<Empleado> empleadosFiltrados = empleados.subList(0, !limite.equals(0) ? limite : empleados.size());
-                         for (Empleado empleado : empleadosFiltrados) {
-                            if(empleado.getNombre().toLowerCase().contains(query.toLowerCase())){
+                    if (!query.isEmpty() || limite != null) {
+                        empleados.stream()
+                            .filter(empleado -> empleado.getNombre().toLowerCase().contains(query.toLowerCase()))
+                            .limit(limite != null && !limite.equals(0) ? limite : empleados.size())
+                            .forEach(empleado -> {
                                 agregarFilaEmpleado(modelo, empleado);
-                            }  
-                        }
+                            });
                     }
                 break;
           case "Por primer apellido":
-                    if(!query.isEmpty() || limite != null){
-                         List<Empleado> empleadosFiltrados = empleados.subList(0, !limite.equals(0) ? limite : empleados.size());
-                         for (Empleado empleado : empleadosFiltrados) {
-                            if(empleado.getApellidoPat().toLowerCase().contains(query.toLowerCase())){
+                    if (!query.isEmpty() || limite != null) {
+                        empleados.stream()
+                            .filter(empleado -> empleado.getApellidoPat().toLowerCase().contains(query.toLowerCase()))
+                            .limit(limite != null && !limite.equals(0) ? limite : empleados.size())
+                            .forEach(empleado -> {
                                 agregarFilaEmpleado(modelo, empleado);
-                            }  
-                        }
+                            });
                     }
                 break;
             case "Por segundo apellido":
-                    if(!query.isEmpty() || limite != null){
-                         List<Empleado> empleadosFiltrados = empleados.subList(0, !limite.equals(0) ? limite : empleados.size());
-                         for (Empleado empleado : empleadosFiltrados) {
-                            if(empleado.getApellidoMat().toLowerCase().contains(query.toLowerCase())){
+                    if (!query.isEmpty() || limite != null) {
+                        empleados.stream()
+                            .filter(empleado -> empleado.getApellidoMat().toLowerCase().contains(query.toLowerCase()))
+                            .limit(limite != null && !limite.equals(0) ? limite : empleados.size())
+                            .forEach(empleado -> {
                                 agregarFilaEmpleado(modelo, empleado);
-                            }  
-                        }
+                            });
                     }
                 break;
             case "Por puestos":
-                    if(!query.isEmpty() || limite != null){
-                    try {
-                        List<Puesto> puestos = puestoDb.obtenerTodos();
-                      
-                        List<Empleado> empleadosFiltrados = puestos
-                                                            .stream()
-                                                            .filter(puesto -> puesto.getNombre().toLowerCase().contains(query.toLowerCase()))
-                                                            .flatMap(puesto -> 
-                                                                empleados
-                                                                    .stream()
-                                                                    .filter(empleado -> empleado.getIdPuesto() == puesto.getId())
-                                                            )
-                                                            .collect(Collectors.toList());
-                        
-                      
-                        System.out.println(empleadosFiltrados);
-                        
-                        for (Empleado empleado : empleadosFiltrados) { 
-                            agregarFilaEmpleado(modelo, empleado);
+                   if (!query.isEmpty() || limite != null) {
+                        try {
+                            List<Puesto> puestos = puestoDb.obtenerTodos();
+
+                            puestos.stream()
+                                .filter(puesto -> puesto.getNombre().toLowerCase().contains(query.toLowerCase()))
+                                .flatMap(puesto -> 
+                                    empleados.stream()
+                                        .filter(empleado -> empleado.getIdPuesto() == puesto.getId())
+                                )
+                                .limit(limite != null && !limite.equals(0) ? limite : Long.MAX_VALUE)
+                                .forEach(empleado -> agregarFilaEmpleado(modelo, empleado));
+
+                        } catch (IOException ex) {
+                            Logger.getLogger(Empleados.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } catch (IOException ex) {
-                        Logger.getLogger(Empleados.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                }
                 break;
             
         }
@@ -229,7 +222,7 @@ public class Empleados extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Buscar");
 
-        filtrarPor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Por nombre", "Por primer apellido", "Por segundo apellido", "Por puestos", "Por fecha de ingreso", "Por género" }));
+        filtrarPor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Por nombre", "Por primer apellido", "Por segundo apellido", "Por puestos", "Por fecha de ingreso", "Por género" }));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Filtrar");

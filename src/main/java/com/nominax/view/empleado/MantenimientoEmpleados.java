@@ -533,7 +533,7 @@ public class MantenimientoEmpleados extends javax.swing.JFrame {
                     }
                 } else {
                     // Si desactiva cooperativa y existe registro, eliminarlo (solo si balance = 0)
-                    if (coopExistente.isPresent()) {
+                    if (coopExistente.isPresent() && coopExistente.get().getBalance() == 0) {
                         cooperativaDAO.eliminar(coopExistente.get().getIdEmpleado());
                     }
                 }
