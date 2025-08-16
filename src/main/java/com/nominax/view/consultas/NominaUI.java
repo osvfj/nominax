@@ -1,14 +1,19 @@
 package com.nominax.view.consultas;
 
+import com.nominax.dao.EmpleadoDAO;
 import com.nominax.dao.NominaDAO;
+import com.nominax.dao.impl.EmpleadoDAOFile;
 import com.nominax.dao.impl.NominaDAOFile;
+import com.nominax.entity.Empleado;
 import com.nominax.entity.Nomina;
 import com.nominax.entity.Puesto;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,6 +24,7 @@ public class NominaUI extends javax.swing.JFrame {
      * Creates new form Nomina
      */
     private final NominaDAO db;
+    private final EmpleadoDAO empleadosDb;
     static List<Puesto> puestos;
     
     public NominaUI() {
@@ -26,6 +32,8 @@ public class NominaUI extends javax.swing.JFrame {
         this.setTitle("Nóminas generadas");
         this.setResizable(false);
         this.db = new NominaDAOFile();
+        this.empleadosDb = new EmpleadoDAOFile();
+        
         Calendar cal = Calendar.getInstance();
 
         int mesActual = cal.get(Calendar.MONTH);
@@ -75,14 +83,14 @@ public class NominaUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Fecha", "Salario Base", "Descuento ARS", "Descuento AFP", "Descuento Cooperativa", "Descuento ISR", "Salario Neto", "Estatus nómina"
+                "ID", "Empleado", "Fecha", "Salario Base", "Descuento ARS", "Descuento AFP", "Descuento Cooperativa", "Descuento ISR", "Salario Neto", "Estatus nómina"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -165,12 +173,12 @@ public class NominaUI extends javax.swing.JFrame {
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(title)
-                .addContainerGap(325, Short.MAX_VALUE))
+                .addContainerGap(649, Short.MAX_VALUE))
             .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(backgroundLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jScrollPane2)
+                    .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1043, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
@@ -179,14 +187,13 @@ public class NominaUI extends javax.swing.JFrame {
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addGap(52, 52, 52)
                 .addComponent(title)
-                .addContainerGap(323, Short.MAX_VALUE))
+                .addContainerGap(416, Short.MAX_VALUE))
             .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(backgroundLayout.createSequentialGroup()
                     .addContainerGap(123, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(5, 5, 5)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -275,12 +282,27 @@ public class NominaUI extends javax.swing.JFrame {
 
    
     private void agregarFilas(DefaultTableModel modelo, List<Nomina> nominas){
-         if(!nominas.isEmpty()){
+        SimpleDateFormat formateador = new SimpleDateFormat("ddMMyyyy");
+        if(!nominas.isEmpty()){
                         nominas.stream()
                                 .forEach(nomina -> {
+                                   String nombreCompleto = "";
+                                   try {
+                                       Optional<Empleado> empleadoEncontrado = empleadosDb.buscarPorId(nomina.getIdEmpleado());
+                                       Empleado empleado = empleadoEncontrado.get();
+                                       
+                                       nombreCompleto = String.format("%s %s %s", empleado.getNombre(), empleado.getApellidoPat(), empleado.getApellidoMat());
+                                    } catch (IOException ex) {
+                                            JOptionPane.showMessageDialog(this,
+                                            String.format("Error al obtener los nombres"),
+                                            "Error",
+                                            JOptionPane.ERROR_MESSAGE
+                                        );
+                                    }
                                     Object[] fila = {
                                         nomina.getIdEmpleado(),
-                                        nomina.getFecha(),
+                                        nombreCompleto,
+                                        formateador.format(nomina.getFecha()),
                                         nomina.getSalarioBase(),
                                         nomina.getDescuentoARS(),
                                         nomina.getDescuentoAFP(),
