@@ -20,4 +20,5 @@ public interface NominaDAO {
     boolean existeNominaMesAnio(int mes, int anio) throws IOException;
     void actualizar(Nomina nomina) throws IOException;
     void eliminar(String idEmpleado, Date fecha) throws IOException;
+    void eliminarPorMesYAnio(int mes, int anio) throws IOException;
 }

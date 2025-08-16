@@ -163,6 +163,37 @@ public class NominaDAOFile implements NominaDAO {
         ManejadorArchivos.escribirTodasLasLineas(ARCHIVO, lineasFiltradas);
     }
 
+    @Override
+    public void eliminarPorMesYAnio(int mes, int anio) throws IOException {
+        List<String> lineas = ManejadorArchivos.leerTodasLasLineas(ARCHIVO);
+        List<String> lineasFiltradas = new ArrayList<>();
+        
+        for (String linea : lineas) {
+            String[] partes = linea.split(SEPARADOR);
+            if (partes.length >= 9) {
+                try {
+                    Date fechaPago = dateFormat.parse(partes[1]);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(fechaPago);
+                    
+                    boolean esDelPeriodo = cal.get(Calendar.MONTH) + 1 == mes && 
+                                         cal.get(Calendar.YEAR) == anio;
+                    System.out.println();
+                    
+                    if (!esDelPeriodo) {
+                        lineasFiltradas.add(linea);
+                    }
+                } catch (ParseException e) {
+                    lineasFiltradas.add(linea);
+                }
+            } else {
+                lineasFiltradas.add(linea);
+            }
+        }
+        
+        ManejadorArchivos.escribirTodasLasLineas(ARCHIVO, lineasFiltradas);
+    }
+    
     private Nomina parsearNomina(String[] partes) {
         try {
             String idEmpleado = partes[0];

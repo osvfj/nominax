@@ -82,7 +82,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="reversarNomina">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Reversasr n&#xf3;mina"/>
+                <Property name="text" type="java.lang.String" value="Reversar n&#xf3;mina"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
               <Events>

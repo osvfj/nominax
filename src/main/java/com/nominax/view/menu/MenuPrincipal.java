@@ -9,6 +9,7 @@ import com.nominax.view.usuario.Registrar;
 import com.nominax.view.departamento.DepartamentoUI;
 import com.nominax.view.empleado.MantenimientoEmpleados;
 import com.nominax.view.nomina.GenerarNomina;
+import com.nominax.view.nomina.ReversarNominaUI;
 import com.nominax.view.puesto.PuestoUI;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -161,7 +162,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         });
         procesos.add(generarNomina);
 
-        reversarNomina.setText("Reversasr nómina");
+        reversarNomina.setText("Reversar nómina");
         reversarNomina.setToolTipText("");
         reversarNomina.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -295,7 +296,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_generarNominaActionPerformed
 
     private void reversarNominaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reversarNominaActionPerformed
-        // TODO add your handling code here:
+        ReversarNominaUI screen = new ReversarNominaUI();
+        screen.setVisible(true);
+        screen.setLocationRelativeTo(null);
     }//GEN-LAST:event_reversarNominaActionPerformed
 
     private void departamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_departamentosActionPerformed
