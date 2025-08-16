@@ -18,16 +18,25 @@ public class CooperativaDAOFile implements CooperativaDAO {
     
     @Override
     public void guardar(Cooperativa cooperativa) throws IOException {
-        Optional<Cooperativa> existente = buscarPorIdEmpleado(cooperativa.getIdEmpleado());
+        List<Cooperativa> todasLasCooperativas = obtenerTodos();
+        Optional<Cooperativa> existente = todasLasCooperativas.stream()
+                                                .filter(c -> c.getIdEmpleado().equals(cooperativa.getIdEmpleado()))
+                                                .findFirst();
         if (existente.isPresent()) {
             throw new IOException("Ya existe una cooperativa para el empleado ID: " + cooperativa.getIdEmpleado());
         }
-        
+
         if (cooperativa.getId() == null) {
             cooperativa.setId(generarProximoId());
         }
-        String linea = cooperativaToString(cooperativa);
-        ManejadorArchivos.agregarLinea(ARCHIVO, linea);
+
+        todasLasCooperativas.add(cooperativa);
+
+        List<String> lineasParaEscribir = todasLasCooperativas.stream()
+                                                .map(this::cooperativaToString)
+                                                .collect(Collectors.toList());
+
+        ManejadorArchivos.escribirTodasLasLineas(ARCHIVO, lineasParaEscribir);
     }
     
     @Override
@@ -84,14 +93,24 @@ public class CooperativaDAOFile implements CooperativaDAO {
     
     @Override
     public void eliminar(Integer idEmpleado) throws IOException {
-        List<Cooperativa> cooperativas = obtenerTodos();
-        boolean eliminado = cooperativas.removeIf(c -> c.getIdEmpleado().equals(idEmpleado));
-        
-        if (!eliminado) {
+        List<String> lineas = ManejadorArchivos.leerTodasLasLineas(ARCHIVO);
+        List<String> lineasFiltradas = new ArrayList<>();
+
+        boolean encontrado = false;
+        for (String linea : lineas) {
+            String[] partes = linea.split(SEPARADOR);
+            if (partes.length == 4 && partes[1].equals(String.valueOf(idEmpleado))) {
+                encontrado = true;
+            } else {
+                lineasFiltradas.add(linea);
+            }
+        }
+
+        if (!encontrado) {
             throw new IOException("Cooperativa no encontrada para el empleado ID: " + idEmpleado);
         }
-        
-       // guardarTodos(cooperativas);
+
+        ManejadorArchivos.escribirTodasLasLineas(ARCHIVO, lineasFiltradas);
     }
     
     
